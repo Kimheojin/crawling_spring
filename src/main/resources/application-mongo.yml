@@ -1,0 +1,11 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    # 관계형 db 제외
+
+  data:
+    mongodb:
+      uri:  mongodb+srv://hurjin1109:ghskfenforhs@cluster0.5oejt.mongodb.net/
+      database: new_raw_data
+      auto-index-creation: true
