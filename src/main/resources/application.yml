@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: mongo
+    # 프로필 활성화
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mongo
+      #mongo 활성화 상태에서만
+
+
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG  # MongoDB 쿼리 로그 보기
+    root: INFO
