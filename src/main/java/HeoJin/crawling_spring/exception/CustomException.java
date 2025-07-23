@@ -1,2 +1,9 @@
-package HeoJin.crawling_spring.exception;public class CustomException {
+package HeoJin.crawling_spring.exception;
+
+public class CustomException extends RuntimeException{
+    public CustomException(String message) {
+        super(message);
+    }
+
+
 }

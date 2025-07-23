@@ -16,4 +16,6 @@ public class CustomExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(e.getMessage()));
     }
+
+    // 나머지 mongo 컴파일 exception 보고
 }
