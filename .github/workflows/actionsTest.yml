@@ -22,5 +22,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: change authority
+        run: chmod +x ./gradlew
+
       - name: Run tests
         run: ./gradlew test
