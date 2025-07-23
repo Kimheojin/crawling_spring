@@ -1,3 +1,5 @@
-### 크롤링 시작
-POST http://localhost:8080/api/crawl/
+# 크롤링 관련 엔드포인트? ㅇㅇ
+
+## 오키친
+POST http://localhost:8080/api/crawling/okitchen?startIndex=1&lastIndex=10
 ##

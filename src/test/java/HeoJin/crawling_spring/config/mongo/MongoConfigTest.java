@@ -88,12 +88,12 @@ class MongoConfigTest {
                 .build();
 
         CookingOrder order1 = CookingOrder.builder()
-                .step(1)
+                .step(Long.valueOf(1))
                 .instruction("김치를 볶는다")
                 .build();
 
         CookingOrder order2 = CookingOrder.builder()
-                .step(2)
+                .step(Long.valueOf(1))
                 .instruction("돼지고기를 넣고 볶는다")
                 .build();
 

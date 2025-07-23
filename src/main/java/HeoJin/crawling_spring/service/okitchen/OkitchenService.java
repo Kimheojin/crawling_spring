@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,6 +59,8 @@ public class OkitchenService {
         // 이름
         String recipeName = content.select("div.detailInfo h2").text();
 
+        log.info("=======  element 접근시작 : {}=======", index);
+
         log.info("레시피 명 : " + recipeName);
 
 
@@ -94,6 +97,7 @@ public class OkitchenService {
                     .instruction(order.text())
                     .build());
             log.info("Step: " + order.text());
+            cookingOrderStep++;
             
         }
 
@@ -117,15 +121,20 @@ public class OkitchenService {
         }
 
         Recipe recipe = Recipe.builder()
+                .sourceUrl(sourceUrl)
                 .siteIndex(Site_index)
                 .recipeName(recipeName)
                 .ingredientList(ingredients)  // List<Ingredient>
                 .cookingOrderList(cookingOrders)  // List<CookingOrder>
                 .cookingTime(Long.valueOf(minutes))
+                .crawledAt(LocalDateTime.now())
                 .build();
 
 
         mongoTemplate.save(recipe, "test1");
+
+        log.info("===== 크롤링 완료  + 해당 인덱스 = {} ====", index);
+
 
 
     }

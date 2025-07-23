@@ -23,8 +23,9 @@ public class CrawlController {
 
     // 오키친
     @PostMapping("/okitchen")
-    public ResponseEntity<String> okitchenCrawling(@RequestParam Long startIndex,
-                                                   @RequestParam Long lastIndex){
+    public ResponseEntity<String> okitchenCrawling(
+            @RequestParam("startIndex") Long startIndex,
+            @RequestParam("lastIndex") Long lastIndex){
         // 인덱스 범위만 받고 하면 되지 않을가??
         okitchenService.loopOkitchenUrl(OKITCHEN_URL, startIndex, lastIndex);
         // 일반적으로 1 ~ 1500 만 하면 될듯
