@@ -26,7 +26,20 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// 138.0.7204.158 -> chrome version 2025.07.22
+	// selenium 관련 라이브러리
+
+
+	// jsoup 관련 라이브러리
+	// https://jsoup.org/download
 	implementation 'org.jsoup:jsoup:1.21.1'
+
+	// https://www.selenium.dev/downloads/
+	// selenium 4.34.0
+	implementation 'org.seleniumhq.selenium:selenium-java:4.34.0'
+	// chrome driver 드라이버 대신
+	//https://bonigarcia.dev/webdrivermanager/#setup
+	implementation 'io.github.bonigarcia:webdrivermanager:6.2.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
