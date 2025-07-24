@@ -125,7 +125,7 @@ public class OkitchenService {
                 .recipeName(recipeName)
                 .ingredientList(ingredients)  // List<Ingredient>
                 .cookingOrderList(cookingOrders)  // List<CookingOrder>
-                .cookingTime(Long.valueOf(minutes))
+                .cookingTime((long) minutes)
                 .crawledAt(LocalDateTime.now())
                 .build();
 

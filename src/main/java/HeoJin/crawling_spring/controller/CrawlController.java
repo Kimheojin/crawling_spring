@@ -2,7 +2,7 @@ package HeoJin.crawling_spring.controller;
 
 
 import HeoJin.crawling_spring.service.okitchen.OkitchenService;
-import HeoJin.crawling_spring.service.tehnth.TenthRecipeService;
+import HeoJin.crawling_spring.service.tehnth.TenthRecipeUrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class CrawlController {
 
     private final OkitchenService okitchenService;
-    private final TenthRecipeService tenthRecipeService;
+    private final TenthRecipeUrlService tenthRecipeService;
 
     private final String OKITCHEN_URL = "https://www.okitchen.co.kr/category/detail?idx=";
     private final String RECIPEABOUT10000 = "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page=";
