@@ -1,4 +1,4 @@
-package HeoJin.crawling_spring.entity;
+package HeoJin.crawling_spring.entity.recipe;
 
 
 import lombok.AllArgsConstructor;

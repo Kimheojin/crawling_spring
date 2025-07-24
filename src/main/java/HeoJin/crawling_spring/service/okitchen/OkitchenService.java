@@ -1,9 +1,9 @@
 package HeoJin.crawling_spring.service.okitchen;
 
 
-import HeoJin.crawling_spring.entity.CookingOrder;
-import HeoJin.crawling_spring.entity.Ingredient;
-import HeoJin.crawling_spring.entity.Recipe;
+import HeoJin.crawling_spring.entity.recipe.CookingOrder;
+import HeoJin.crawling_spring.entity.recipe.Ingredient;
+import HeoJin.crawling_spring.entity.recipe.Recipe;
 import HeoJin.crawling_spring.exception.CustomException;
 import HeoJin.crawling_spring.service.util.CustomWebCrawlerUtil;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.jsoup.select.Elements;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,7 +92,7 @@ public class OkitchenService {
                 continue;
             }
             cookingOrders.add(CookingOrder.builder()
-                    .step(Long.valueOf(cookingOrderStep))
+                    .step((long) cookingOrderStep)
                     .instruction(order.text())
                     .build());
             log.info("Step: " + order.text());
@@ -134,8 +133,6 @@ public class OkitchenService {
         mongoTemplate.save(recipe, "test1");
 
         log.info("===== 크롤링 완료  + 해당 인덱스 = {} ====", index);
-
-
 
     }
 

@@ -2,4 +2,11 @@
 
 ## 오키친
 POST http://localhost:8080/api/crawling/okitchen?startIndex=1&lastIndex=10
-##
+Content-Type: application/json
+
+###
+## 만개의 레시피
+
+
+POST http://localhost:8080/api/crawling/tenthRecipes
+

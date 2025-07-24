@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/crawling")
 @RequiredArgsConstructor
@@ -19,7 +21,9 @@ public class CrawlController {
     private final TenthRecipeService tenthRecipeService;
 
     private final String OKITCHEN_URL = "https://www.okitchen.co.kr/category/detail?idx=";
-    private final String COLLECTION_NAME = "TEST1";
+    private final String RECIPEABOUT10000 = "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page=";
+
+
 
     // 오키친
     @PostMapping("/okitchen")
@@ -34,10 +38,12 @@ public class CrawlController {
 
     // 10000개의 레시피
     @PostMapping("/tenthRecipes")
-    public ResponseEntity<String> tenthRecipesCrawling() {
+    public ResponseEntity<String> tenthRecipesCrawling() throws IOException {
 
-        // 이거 url 생성 코드 먼저 돌린 다음에
-        // 저번에 추천
+        // url 리스트 생성 코드
+        tenthRecipeService.crawlRecipeUrls(RECIPEABOUT10000, 1, 254);
+
+        // 리스트 읽고 10000 레시피 생성
 
         return ResponseEntity.ok("크롤링이 종료되었습니다");
     }
