@@ -6,10 +6,7 @@ import HeoJin.crawling_spring.service.okitchen.OkitchenService;
 import HeoJin.crawling_spring.service.tehnth.TenthRecipeUrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -25,6 +22,9 @@ public class CrawlController {
 
     private final String OKITCHEN_URL = "https://www.okitchen.co.kr/category/detail?idx=";
     private final String RECIPEABOUT10000 = "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page=";
+
+    // 이거 난이도 별로
+    private final String MENUPAN_BASE_URL = "https://www.menupan.com/Cook/recipere.asp?difficulty={}&page=";
 
 
 
@@ -51,8 +51,25 @@ public class CrawlController {
         return ResponseEntity.ok("크롤링이 종료되었습니다");
     }
 
-    // 삼양 공식
+    // menuPan
+    @PostMapping("/menuPan")
+    public ResponseEntity<String> menuPanCrawling(
+            @RequestParam("difficulty") int difficulty,
+            @RequestParam("startPage") int startPage,
+            @RequestParam("endPage") int endPage) throws IOException {
 
+        // difficulty 값 검증
+        if (difficulty != 10 && difficulty != 20 && difficulty != 30) {
+            return ResponseEntity.badRequest().body("difficulty는 10(쉬움), 20(보통), 30(어려움)만 가능합니다.");
+        }
 
-    
+        // URL 생성
+        String url = MENUPAN_BASE_URL.replace("{}", String.valueOf(difficulty));
+
+        // 크롤링 실행
+        menuPanCrawlingService.crawlRecipeUrls(url, startPage, endPage);
+
+        return ResponseEntity.ok("menuPan 크롤링이 종료되었습니다 (난이도: " + difficulty + ")");
+    }
+
 }
