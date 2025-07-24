@@ -25,6 +25,4 @@ public class CustomWebCrawlerUtil {
                 .userAgent("Mozilla/5.0")
                 .get();
     }
-
-
 }

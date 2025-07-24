@@ -1,6 +1,7 @@
 package HeoJin.crawling_spring.controller;
 
 
+import HeoJin.crawling_spring.service.menupan.MenuPanCrawlingService;
 import HeoJin.crawling_spring.service.okitchen.OkitchenService;
 import HeoJin.crawling_spring.service.tehnth.TenthRecipeUrlService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class CrawlController {
 
     private final OkitchenService okitchenService;
     private final TenthRecipeUrlService tenthRecipeService;
+    private final MenuPanCrawlingService menuPanCrawlingService;
+
 
     private final String OKITCHEN_URL = "https://www.okitchen.co.kr/category/detail?idx=";
     private final String RECIPEABOUT10000 = "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page=";
@@ -41,7 +44,7 @@ public class CrawlController {
     public ResponseEntity<String> tenthRecipesCrawling() throws IOException {
 
         // url 리스트 생성 코드
-        tenthRecipeService.crawlRecipeUrls(RECIPEABOUT10000, 1, 254);
+        tenthRecipeService.crawlRecipeUrls(RECIPEABOUT10000, 1, 10);
 
         // 리스트 읽고 10000 레시피 생성
 
