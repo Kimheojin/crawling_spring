@@ -1,4 +1,4 @@
-# 크롤링 관련 엔드포인트? ㅇㅇ
+# 크롤링 관련 엔드포인트?
 
 ## 오키친
 POST http://localhost:8080/api/crawling/okitchen?startIndex=1&lastIndex=10
@@ -7,15 +7,25 @@ Content-Type: application/json
 ###
 ## 만개의 레시피
 
-
 POST http://localhost:8080/api/crawling/tenthRecipes
 
 ###
 
-## menupan
+## menupan 인덱스 부분
 
 POST http://localhost:8080/api/crawling/menuPan
 
 
 ###
+
+## SAMYANG 인덱스 부분
+
+POST http://localhost:8080/api/crawling/samYang?startPage=1&endPage=3
+
+
+###
+
+## 한식 부분 인덱스 크롤링
+
+POST
 
