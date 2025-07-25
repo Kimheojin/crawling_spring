@@ -16,3 +16,19 @@ logging:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
     org.springframework.data.mongodb: DEBUG  # MongoDB 쿼리 로그 보기
     root: INFO
+
+---
+recipe:
+  urls:
+    okitchen: "https://www.okitchen.co.kr/category/detail?idx="
+    recipe10000: "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page="
+    menupan: "https://www.menupan.com/Cook/recipere.asp?difficulty={}&page="
+    samyang: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
+    hansik: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage=15&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
+
+
+---
+recipe:
+  hansik:
+    collection-name: "testHansik"
+    css-selector: "a.stretched-link"
