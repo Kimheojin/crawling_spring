@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class OkitchenService {
-
-
     private final MongoTemplate mongoTemplate;
-    public void loopOkitchenUrl(String baseUrl, Long startIndex, Long lastIndex){
+
+
+    @Value("${recipe.sites.okitchen.url}")
+    private String baseUrl;
+
+    @Value("${recipe.sites.okitchen.collection-name}")
+    private String collectionName;
+
+    public void loopOkitchenUrl( Long startIndex, Long lastIndex){
         log.info("크롤링 시장: startIndex -> {}, lastIndex -> {}", startIndex, lastIndex);
 
         for(Long i = startIndex; i <= lastIndex; i++){
@@ -36,7 +43,7 @@ public class OkitchenService {
                 String fullUrl = baseUrl + i;
                 crawRecipes(fullUrl, i.intValue());
 
-                Thread.sleep(500);
+                Thread.sleep(500); // 0.5초
             } catch (Exception e ){
                 log.error("크롤링 실패 : 인덱스 -> {}, message : {} ", i, e.getMessage());
             }
@@ -130,7 +137,7 @@ public class OkitchenService {
                 .build();
 
 
-        mongoTemplate.save(recipe, "test1");
+        mongoTemplate.save(recipe, collectionName);
 
         log.info("===== 크롤링 완료  + 해당 인덱스 = {} ====", index);
 

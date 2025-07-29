@@ -4,6 +4,7 @@ package HeoJin.crawling_spring.service.tehnth;
 import HeoJin.crawling_spring.service.util.CrawlingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,10 +17,18 @@ import java.io.IOException;
 public class TenthRecipeUrlService {
 
     private final CrawlingUtil crawlingUtil;
-    private final static String COLLECTION_NAME = "test10000";
-    private final static String cssSelector = "div.theme_list.st2 a.thumbnail";
 
-    public void crawlRecipeUrls(String baseUrl, int startPage, int endPage) throws IOException {
-        crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, COLLECTION_NAME);
+    @Value("${recipe.indexUrl.recipe10000.url}")
+    private String baseUrl ;
+
+
+    @Value("${recipe.indexUrl.recipe10000.collection-name}")
+    private String collectionName;
+
+    @Value("${recipe.indexUrl.recipe10000.css-selector}")
+    private String cssSelector;
+
+    public void crawlRecipeUrls( int startPage, int endPage) throws IOException {
+        crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, collectionName);
     }
 }

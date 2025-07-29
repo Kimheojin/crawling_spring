@@ -14,13 +14,16 @@ public class HansikUrlCrawlingService {
 
     private final CrawlingUtil crawlingUtil;
 
-    @Value("${recipe.hansik.collection-name}")
+    @Value("${recipe.indexUrl.hansik.url}")
+    private String baseUrl;
+
+    @Value("${recipe.indexUrl.hansik.collection-name}")
     private String collectionName;
 
-    @Value("${recipe.hansik.css-selector}")
+    @Value("${recipe.indexUrl.hansik.css-selector}")
     private String cssSelector;
 
-    public void crawlRecipeUrls(String baseUrl, int startPage, int endPage) throws IOException {
+    public void crawlRecipeUrls( int startPage, int endPage) throws IOException {
         crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, collectionName);
     }
 

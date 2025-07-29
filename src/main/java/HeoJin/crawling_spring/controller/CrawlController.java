@@ -1,12 +1,12 @@
 package HeoJin.crawling_spring.controller;
 
-import HeoJin.crawling_spring.config.RecipeUrlConfig;
 import HeoJin.crawling_spring.service.hansik.HansikUrlCrawlingService;
 import HeoJin.crawling_spring.service.menupan.MenuPanCrawlingService;
 import HeoJin.crawling_spring.service.okitchen.OkitchenService;
 import HeoJin.crawling_spring.service.samyang.SamYangUrlService;
 import HeoJin.crawling_spring.service.tehnth.TenthRecipeUrlService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,23 +22,25 @@ public class CrawlController {
     private final MenuPanCrawlingService menuPanCrawlingService;
     private final SamYangUrlService samYangUrlService;
     private final HansikUrlCrawlingService hansikUrlCrawlingService;
-    private final RecipeUrlConfig urlConfig;
+
+    @Value("${recipe.indexUrl.menu-pan.url}")
+    private String menuPanIndexUrl;
+
 
     @PostMapping("/okitchen")
     public ResponseEntity<String> okitchenCrawling(
             @RequestParam("startIndex") Long startIndex,
             @RequestParam("lastIndex") Long lastIndex) {
 
-        String okitchenUrl = urlConfig.getUrls().get("okitchen");
-        okitchenService.loopOkitchenUrl(okitchenUrl, startIndex, lastIndex);
+
+        okitchenService.loopOkitchenUrl(startIndex, lastIndex);
         return ResponseEntity.ok("크롤링이 종료 되었습니다.");
     }
 
     @PostMapping("/tenthRecipes")
     public ResponseEntity<String> tenthRecipesCrawling() throws IOException {
 
-        String recipe10000Url = urlConfig.getUrls().get("recipe10000");
-        tenthRecipeService.crawlRecipeUrls(recipe10000Url, 1, 10);
+        tenthRecipeService.crawlRecipeUrls(1, 10);
         return ResponseEntity.ok("크롤링이 종료되었습니다");
     }
 
@@ -51,8 +53,7 @@ public class CrawlController {
         if (difficulty != 10 && difficulty != 20 && difficulty != 30) {
             return ResponseEntity.badRequest().body("difficulty는 10(쉬움), 20(보통), 30(어려움)만 가능합니다.");
         }
-
-        String menupanBaseUrl = urlConfig.getUrls().get("menupan");
+        String menupanBaseUrl = menuPanIndexUrl;
         String url = menupanBaseUrl.replace("{}", String.valueOf(difficulty));
         menuPanCrawlingService.crawlRecipeUrls(url, startPage, endPage);
 
@@ -64,8 +65,7 @@ public class CrawlController {
             @RequestParam("startPage") int startPage,
             @RequestParam("endPage") int endPage) throws IOException {
 
-        String samyangUrl = urlConfig.getUrls().get("samyang");
-        samYangUrlService.crawlRecipeUrls(samyangUrl, startPage, endPage);
+        samYangUrlService.crawlRecipeUrls( startPage, endPage);
         return ResponseEntity.ok("삼양 크롤링이 종료되었습니다");
     }
 
@@ -75,8 +75,7 @@ public class CrawlController {
             @RequestParam("endPage") int endPage
     ) throws IOException {
 
-        String hansikUrl = urlConfig.getUrls().get("hansik");
-        hansikUrlCrawlingService.crawlRecipeUrls(hansikUrl, startPage, endPage);
+        hansikUrlCrawlingService.crawlRecipeUrls( startPage, endPage);
         return ResponseEntity.ok("한식 크롤링이 종료되었습니다.");
     }
 }

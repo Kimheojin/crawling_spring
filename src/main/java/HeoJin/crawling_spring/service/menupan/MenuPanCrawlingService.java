@@ -3,6 +3,7 @@ package HeoJin.crawling_spring.service.menupan;
 
 import HeoJin.crawling_spring.service.util.CrawlingUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,11 +13,15 @@ import java.io.IOException;
 public class MenuPanCrawlingService {
 
     private final CrawlingUtil crawlingUtil;
-    private final static String COLLECTION_NAME = "testMenuPan";
-    private final static String cssSelector = "span.link a";
+
+    @Value("${recipe.indexUrl.menu-pan.collection-name}")
+    private String collectionName;
+
+    @Value("${recipe.indexUrl.menu-pan.css-selector}")
+    private String cssSelector;
 
     public void crawlRecipeUrls(String baseUrl, int startPage, int endPage) throws IOException {
-        crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, COLLECTION_NAME);
+        crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, collectionName);
     }
 
 

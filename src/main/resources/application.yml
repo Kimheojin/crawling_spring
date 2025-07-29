@@ -18,17 +18,41 @@ logging:
     root: INFO
 
 ---
+## 본 사이트 url
 recipe:
-  urls:
-    okitchen: "https://www.okitchen.co.kr/category/detail?idx="
-    recipe10000: "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page="
-    menupan: "https://www.menupan.com/Cook/recipere.asp?difficulty={}&page="
-    samyang: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
-    hansik: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage=15&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
+  sites:
+    okitchen:
+      url: "https://www.okitchen.co.kr/category/detail?idx="
+      collection-name: "okitchenData"
+    recipe10000:
+      url: "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page="
+    menupan:
+      url: "https://www.menupan.com/Cook/recipere.asp?difficulty={}&page="
+    samyang:
+      url: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
+    hansik:
+      url: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage=15&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
 
 
 ---
+## 인덱스 관련
 recipe:
-  hansik:
-    collection-name: "testHansik"
-    css-selector: "a.stretched-link"
+  indexUrl:
+    recipe10000:
+      url: "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page="
+      collection-name: "index-index10000"
+      css-selector: "div.theme_list.st2 a.thumbnail"
+    hansik:
+      url: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage=15&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
+      collection-name: "testHansik"
+      css-selector: "a.stretched-link"
+    samyang:
+      url: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
+      collection-name: "testSamYang"
+      css-selector: "a.subject"
+    menu-pan:
+      url: "https://www.menupan.com/Cook/recipere.asp?difficulty={}&page="
+      collection-name: "testMenuPan"
+      css-selector: "span.link a"
+
+
