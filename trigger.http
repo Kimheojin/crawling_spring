@@ -1,7 +1,7 @@
 # 크롤링 관련 엔드포인트?
 
 ## 오키친 실제 동작
-POST http://localhost:8080/api/crawling/okitchen?startIndex=1&lastIndex=1500
+POST http://localhost:8080/api/crawling/recipe/okitchen?startIndex=1&lastIndex=1500
 Content-Type: application/json
 
 ###
@@ -14,7 +14,7 @@ POST http://localhost:8080/api/crawling/tenthRecipes?startPage=1&lastPage=265
 
 ## menupan 인덱스 생성
 
-POST http://localhost:8080/api/crawling/menuPan?difficulty=10&startPage=1&endPage=60
+POST http://localhost:8080/api/crawling/menuPan?difficulty=30&startPage=1&endPage=7
 
 
 ### 난이도 10 -> 1 ~ 60
@@ -23,7 +23,7 @@ POST http://localhost:8080/api/crawling/menuPan?difficulty=10&startPage=1&endPag
 
 ## SAMYANG 인덱스 생성
 
-POST http://localhost:8080/api/crawling/samYang?startPage=1&endPage=3
+POST http://localhost:8080/api/crawling/samYang?categoryNo=23&startPage=1&endPage=3
 
 ## no 21 -> 기본 인덱스, 1 ~ 41
 ## no 20 -> 1 ~ 12
@@ -34,5 +34,5 @@ POST http://localhost:8080/api/crawling/samYang?startPage=1&endPage=3
 
 ## 한식 부분 인덱스 생성
 
-POST http://localhost:8080/api/crawling/hansik?startPage=1&endPage=3
+POST http://localhost:8080/api/crawling/hansik?startPage=1&endPage=17
 

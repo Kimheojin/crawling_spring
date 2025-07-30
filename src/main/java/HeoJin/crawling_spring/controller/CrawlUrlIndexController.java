@@ -15,9 +15,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/crawling")
 @RequiredArgsConstructor
-public class CrawlController {
+public class CrawlUrlIndexController {
 
-    private final OkitchenService okitchenService;
     private final TenthRecipeUrlService tenthRecipeService;
     private final MenuPanCrawlingService menuPanCrawlingService;
     private final SamYangUrlService samYangUrlService;
@@ -30,15 +29,7 @@ public class CrawlController {
     private String samYangUrl;
 
 
-    @PostMapping("/okitchen")
-    public ResponseEntity<String> okitchenCrawling(
-            @RequestParam("startIndex") Long startIndex,
-            @RequestParam("lastIndex") Long lastIndex) {
 
-
-        okitchenService.loopOkitchenUrl(startIndex, lastIndex);
-        return ResponseEntity.ok("크롤링이 종료 되었습니다.");
-    }
 
     @PostMapping("/tenthRecipes")
     public ResponseEntity<String> tenthRecipesCrawling(
