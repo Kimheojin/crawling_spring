@@ -35,7 +35,7 @@ public class OkitchenService {
     @Value("${recipe.sites.okitchen.collection-name}")
     private String collectionName;
 
-    public void loopOkitchenUrl( Long startIndex, Long lastIndex){
+    public void loopOkitchenUrl(Long startIndex, Long lastIndex){
         log.info("크롤링 시장: startIndex -> {}, lastIndex -> {}", startIndex, lastIndex);
 
         for(Long i = startIndex; i <= lastIndex; i++){
@@ -111,20 +111,28 @@ public class OkitchenService {
 
         Element timeElement = content.select("div.recipe-stats span:contains(조리시간) + h4").first();
         int minutes = 0;
-        if(timeElement != null) {
-            String timeStr = timeElement.text()
-                    .replaceAll("[^0-9]", ""); // 숫자가 아닌 모든 문자 제거
 
-            // 숫자가 없으면 예외 발생
-            if (timeStr.isEmpty()) {
-                throw new CustomException("조리시간이 숫자형태로 존재하지 않아요" + index);
+        try {
+            if(timeElement != null) {
+                String timeStr = timeElement.text()
+                        .replaceAll("[^0-9]", ""); // 숫자가 아닌 모든 문자 제거
+
+                // 숫자가 없으면 예외 발생
+                if (timeStr.isEmpty()) {
+                    throw new CustomException("조리시간이 숫자형태로 존재하지 않아요" + index);
+                }
+                // 숫자가 있으면 파싱
+                minutes = Integer.parseInt(timeStr);
+            } else {
+                // timeElement 자체가 없는 경우
+                throw new CustomException("조리시간이 존재하지 않아요. index : "+ index);
             }
-            // 숫자가 있으면 파싱
-            minutes = Integer.parseInt(timeStr);
-        } else {
-            // timeElement 자체가 없는 경우
-            throw new CustomException("조리시간이 존재하지 않아요. index : "+ index);
+        } catch (CustomException e) {
+            log.error("조리시간 파싱 실패: {}", e.getMessage());
+            minutes = 0; // 디폴트값
         }
+
+        log.info("조리시간: {}분, 계속 진행합니다.", minutes);
 
         Recipe recipe = Recipe.builder()
                 .sourceUrl(sourceUrl)
