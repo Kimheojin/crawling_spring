@@ -15,8 +15,7 @@ public class SamYangUrlService {
 
     private final CrawlingUtil crawlingUtil;
 
-    @Value("${recipe.indexUrl.samyang.url}")
-    private String baseUrl;
+
 
     @Value("${recipe.indexUrl.samyang.css-selector}")
     private String cssSelector;
@@ -25,8 +24,7 @@ public class SamYangUrlService {
     private String collectionName;
 
 
-
-    public void crawlRecipeUrls(int startPage, int endPage) throws IOException {
+    public void crawlRecipeUrls(String baseUrl, int startPage, int endPage) throws IOException {
         crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, collectionName);
     }
 

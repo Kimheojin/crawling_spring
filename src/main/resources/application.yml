@@ -23,7 +23,7 @@ recipe:
   sites:
     okitchen:
       url: "https://www.okitchen.co.kr/category/detail?idx="
-      collection-name: "okitchenData"
+      collection-name: "okitchen-data"
     recipe10000:
       url: "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page="
     menupan:
@@ -43,11 +43,11 @@ recipe:
       collection-name: "index-index10000"
       css-selector: "div.theme_list.st2 a.thumbnail"
     hansik:
-      url: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage=15&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
+      url: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage={}&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
       collection-name: "testHansik"
       css-selector: "a.stretched-link"
     samyang:
-      url: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
+      url: "https://m.serveq.co.kr/recipe/board/list.html?board_no={}&page="
       collection-name: "testSamYang"
       css-selector: "a.subject"
     menu-pan:

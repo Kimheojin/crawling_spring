@@ -26,6 +26,9 @@ public class CrawlController {
     @Value("${recipe.indexUrl.menu-pan.url}")
     private String menuPanIndexUrl;
 
+    @Value("${recipe.indexUrl.samyang.url}")
+    private String samYangUrl;
+
 
     @PostMapping("/okitchen")
     public ResponseEntity<String> okitchenCrawling(
@@ -38,9 +41,12 @@ public class CrawlController {
     }
 
     @PostMapping("/tenthRecipes")
-    public ResponseEntity<String> tenthRecipesCrawling() throws IOException {
+    public ResponseEntity<String> tenthRecipesCrawling(
+            @RequestParam("startPage") int startPage,
+            @RequestParam("lastPage") int lastPage
+    ) throws IOException {
 
-        tenthRecipeService.crawlRecipeUrls(1, 10);
+        tenthRecipeService.crawlRecipeUrls(startPage, lastPage);
         return ResponseEntity.ok("크롤링이 종료되었습니다");
     }
 
@@ -62,10 +68,20 @@ public class CrawlController {
 
     @PostMapping("/samYang")
     public ResponseEntity<String> samYangCrawling(
+            @RequestParam("categoryNo") int no,
             @RequestParam("startPage") int startPage,
             @RequestParam("endPage") int endPage) throws IOException {
 
-        samYangUrlService.crawlRecipeUrls( startPage, endPage);
+        if (no != 20 && no != 21 && no != 22 && no != 23) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("no 는 20, 21, 22, 23만 가능합니다.");
+        }
+
+        String samYangNoUrl = samYangUrl;
+        String url = samYangNoUrl.replace("{}", String.valueOf(no));
+
+        samYangUrlService.crawlRecipeUrls(url ,startPage, endPage);
         return ResponseEntity.ok("삼양 크롤링이 종료되었습니다");
     }
 

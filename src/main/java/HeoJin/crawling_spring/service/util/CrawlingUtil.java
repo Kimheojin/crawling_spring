@@ -69,4 +69,41 @@ public class CrawlingUtil {
 
         mongoTemplate.insert(urlIndices, collectionName);
     }
+
+    public void crawlWithPaginationHanSik(String baseUrlTemplate, int startPage, int endPage,
+                                    String cssSelector, String collectionName) throws IOException, CustomException {
+        log.info("크롤링 시작 - 페이지 범위: {} ~ {}", startPage, endPage);
+
+        List<String> urls = generateUrlsFromTemplate(baseUrlTemplate, startPage, endPage);
+
+        for (String url : urls) {
+            try {
+                log.info("크롤링 중: {}", url);
+                List<String> extractedHrefs = CustomWebCrawlerUtil.extractHrefs(url, cssSelector);
+                log.info("추출된 링크 수: {}", extractedHrefs.size());
+
+                saveExtractedUrls(extractedHrefs, collectionName);
+                log.info("데이터 저장 완료");
+                Thread.sleep(10000);
+            } catch (IOException e) {
+                log.error("크롤링 실패: {} - {}", url, e.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new CustomException("크롤링 중단됨: " + e.getMessage());
+            }
+        }
+
+        log.info("전체 크롤링 완료");
+    }
+
+    private List<String> generateUrlsFromTemplate(String baseUrlTemplate, int startPage, int endPage) {
+        List<String> urls = new ArrayList<>();
+
+        for (int page = startPage; page <= endPage; page++) {
+            String url = baseUrlTemplate.replace("{}", String.valueOf(page));
+            urls.add(url);
+        }
+
+        return urls;
+    }
 }

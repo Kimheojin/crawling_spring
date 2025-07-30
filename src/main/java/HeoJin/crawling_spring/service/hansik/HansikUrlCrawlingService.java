@@ -24,7 +24,7 @@ public class HansikUrlCrawlingService {
     private String cssSelector;
 
     public void crawlRecipeUrls( int startPage, int endPage) throws IOException {
-        crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, collectionName);
+        crawlingUtil.crawlWithPaginationHanSik(baseUrl, startPage, endPage, cssSelector, collectionName);
     }
 
 
