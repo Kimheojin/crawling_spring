@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class Ingredient {
     private String ingredient;
     private String quantity;
+
 }

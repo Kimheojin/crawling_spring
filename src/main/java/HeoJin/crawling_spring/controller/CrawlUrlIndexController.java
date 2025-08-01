@@ -2,13 +2,15 @@ package HeoJin.crawling_spring.controller;
 
 import HeoJin.crawling_spring.service.hansik.HansikUrlCrawlingService;
 import HeoJin.crawling_spring.service.menupan.MenuPanCrawlingService;
-import HeoJin.crawling_spring.service.okitchen.OkitchenService;
 import HeoJin.crawling_spring.service.samyang.SamYangUrlService;
 import HeoJin.crawling_spring.service.tehnth.TenthRecipeUrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 

@@ -25,13 +25,17 @@ recipe:
       url: "https://www.okitchen.co.kr/category/detail?idx="
       collection-name: "okitchen-data"
     recipe10000:
-      url: "https://www.10000recipe.com/issue/view.html?cid=gdubu33&types=magazine&page="
+      url: "https://www.10000recipe.com"
+      collection-name: "recipe-10000-data"
     menupan:
       url: "https://www.menupan.com/Cook/recipere.asp?difficulty={}&page="
+      collection-name: "menupan-data"
     samyang:
       url: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
+      collection-name: "samyang-data"
     hansik:
       url: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage=15&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
+      collection-name: "hansik"
 
 
 ---
