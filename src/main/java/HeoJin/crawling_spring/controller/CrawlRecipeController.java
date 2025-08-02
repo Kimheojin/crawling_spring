@@ -29,8 +29,6 @@ public class CrawlRecipeController {
     public ResponseEntity<String> okitchenCrawling(
             @RequestParam("startIndex") Long startIndex,
             @RequestParam("lastIndex") Long lastIndex) {
-
-
         okitchenService.loopOkitchenUrl(startIndex, lastIndex);
         return ResponseEntity.ok("크롤링이 종료 되었습니다.");
     }
@@ -38,7 +36,8 @@ public class CrawlRecipeController {
     // collection 명에서 읽어오는 거 service 로직에서 해야하나
 
     @PostMapping("/tenthRecipes")
-    public ResponseEntity<String> tenthRecipeCrawling(){
+    public ResponseEntity<String> tenthRecipeCrawling() throws Exception {
+        tenthRecipeService.crawlingRecipeAboutTenth();
         return ResponseEntity.ok("크롤링이 완료되었습니다.");
     }
 
