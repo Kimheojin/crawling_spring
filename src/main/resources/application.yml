@@ -31,7 +31,7 @@ recipe:
       url: "https://www.menupan.com/Cook/recipeview.asp?cookid="
       collection-name: "menupan-data"
     samyang:
-      url: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
+      url: "https://m.serveq.co.kr/"
       collection-name: "samyang-data"
     hansik:
       url: "https://www.hansik.or.kr/board/re/view/323?bbsSeq={}&bbsId=323&curPage=1&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
