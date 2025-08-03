@@ -4,6 +4,7 @@ package HeoJin.crawling_spring.service.menupan;
 import HeoJin.crawling_spring.entity.recipe.CookingOrder;
 import HeoJin.crawling_spring.entity.recipe.Ingredient;
 import HeoJin.crawling_spring.entity.recipe.Recipe;
+import HeoJin.crawling_spring.service.util.CustomWebCrawlerUtil;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +39,7 @@ public class MenuPanRecipeService {
     @Value("${recipe.indexUrl.menu-pan.collection-name}")
     private String indexCollectionName;
 
-    public void crawlingRecipeAboutMenupan(){
+    public void crawlingRecipeAboutMenupan() throws IOException {
         // url mongo 에서 가져온 다음에 합치는 메소드
 
         List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
@@ -58,9 +60,9 @@ public class MenuPanRecipeService {
         return mongoTemplate.find(query, Map.class, collectionName);
     }
 
-    private void crawledRecipe(String acceptUrl, String siteIndex){
+    private void crawledRecipe(String acceptUrl, String siteIndex) throws IOException {
         String sourceUrl = acceptUrl;
-        Document document = new Document(sourceUrl);
+        Document document = CustomWebCrawlerUtil.connect(sourceUrl);
 
         // 음식 명
         Element titleElement = document.selectFirst("div.wrap_top h2");
