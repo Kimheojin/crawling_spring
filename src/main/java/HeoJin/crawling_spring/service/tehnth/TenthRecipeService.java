@@ -1,6 +1,7 @@
 package HeoJin.crawling_spring.service.tehnth;
 
 
+import HeoJin.crawling_spring.entity.recipe.CookingOrder;
 import HeoJin.crawling_spring.entity.recipe.Ingredient;
 import HeoJin.crawling_spring.entity.recipe.Recipe;
 import HeoJin.crawling_spring.service.util.CustomWebCrawlerUtil;
@@ -28,7 +29,6 @@ public class TenthRecipeService {
     @Value("${recipe.indexUrl.recipe10000.collection-name}")
     private String indexCollectionName;
 
-
     @Value("${recipe.sites.recipe10000.collection-name}")
     private String RecipeCollectionName;
 
@@ -49,7 +49,6 @@ public class TenthRecipeService {
             String sourceUrl = baseUrl + siteIndex;
 
             crawledRecipe(sourceUrl, siteIndex);
-
 
         }
 
@@ -97,19 +96,24 @@ public class TenthRecipeService {
             String quantity = quantityElement != null ? quantityElement.text().trim() : "";
 
 
-            ingredients.add(new Ingredient(ingredientName + " + " + quantity));
+            ingredientList.add(new Ingredient(ingredientName, quantity));
             if (!ingredientName.isEmpty()) {
                 log.info("Ingredient: {} + {}", ingredientName, quantity);
-
             }
         }
 
-        // 로그
-
         // 조리 순서
 
-        // 조리 시간
+        Elements steps = content.select("div[id^=stepdescr]");  // id가 'stepdescr'로 시작하는 모든 div 선택
+        ArrayList<CookingOrder> cookingOrders = new ArrayList<>();
+        Long stepCount = 0l;
+        for (Element step : steps) {
+            String stepDescription = step.text().trim();
+            log.info("Step {}: {}", stepCount++, stepDescription);
+            cookingOrders.add(new CookingOrder(stepCount, stepDescription));
+        }
 
+        // 조리 시간
         String timeText = content.select("span.view2_summary_info2").text().trim();
         int time = 0;
         try {
@@ -120,14 +124,14 @@ public class TenthRecipeService {
         }
 
         Recipe recipe = Recipe.builder()
-                .siteIndex(siteindex)
-                .name(foodname)
-                .cookingTime(time)
-                .cookinOrderList(cookingOrders)
-                .ingredientList(ingredients)
+                .siteIndex(site_index)
+                .recipeName(foodname)
+                .cookingTime(Long.parseLong(String.valueOf(time)))
+                .cookingOrderList(cookingOrders)
+                .ingredientList(ingredientList)
                 .build();
 
-        mongoTemplate.insert(recipe, )
+        mongoTemplate.insert(recipe, RecipeCollectionName);
 
 
 

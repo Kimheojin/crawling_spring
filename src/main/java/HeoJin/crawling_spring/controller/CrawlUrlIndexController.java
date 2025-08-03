@@ -32,7 +32,6 @@ public class CrawlUrlIndexController {
 
 
 
-
     @PostMapping("/tenthRecipes")
     public ResponseEntity<String> tenthRecipesCrawling(
             @RequestParam("startPage") int startPage,

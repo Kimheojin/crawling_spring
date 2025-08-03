@@ -28,14 +28,14 @@ recipe:
       url: "https://www.10000recipe.com"
       collection-name: "recipe-10000-data"
     menupan:
-      url: "https://www.menupan.com/Cook/recipere.asp?difficulty={}&page="
+      url: "https://www.menupan.com/Cook/recipeview.asp?cookid="
       collection-name: "menupan-data"
     samyang:
       url: "https://m.serveq.co.kr/recipe/board/list.html?board_no=21&page="
       collection-name: "samyang-data"
     hansik:
-      url: "https://www.hansik.or.kr/board/re/list/323?bbsSeq=&bbsId=323&curPage=15&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
-      collection-name: "hansik"
+      url: "https://www.hansik.or.kr/board/re/view/323?bbsSeq={}&bbsId=323&curPage=1&bbsType=re&menuSn=193&fdSe=&flag=N&searchWord="
+      collection-name: "hansik-data"
 
 
 ---
