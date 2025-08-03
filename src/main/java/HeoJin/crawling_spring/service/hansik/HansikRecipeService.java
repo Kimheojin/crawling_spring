@@ -1,6 +1,8 @@
 package HeoJin.crawling_spring.service.hansik;
 
 
+import HeoJin.crawling_spring.entity.recipe.CookingOrder;
+import HeoJin.crawling_spring.entity.recipe.Ingredient;
 import HeoJin.crawling_spring.service.hansik.dto.RecipeUrlDto;
 import HeoJin.crawling_spring.service.util.CustomWebCrawlerUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,11 @@ public class HansikRecipeService {
     @Value("${recipe.sites.hansik.collection-name}")
     private String collectionName;
 
+    @Value("${recipe.indexUrl.hansik.collection-name}")
+    private String indexCollectionName;
+
+
+
     public void loopHansikUrl() throws IOException {
         List<RecipeUrlDto> urlDtos = generateRecipeUrls();
         for (RecipeUrlDto urlDto : urlDtos) {
@@ -40,8 +47,8 @@ public class HansikRecipeService {
         }
     }
 
-    public List<Integer> extractHrefIndexNumbers(){
-        List<Map> documents = mongoTemplate.findAll(Map.class, "testHansik");
+    public List<Integer> extractHrefIndexNumbers(String indexCollectionName){
+        List<Map> documents = mongoTemplate.findAll(Map.class, indexCollectionName);
 
         // 숫자만 가져오기
         Pattern pattern = Pattern.compile("\\d+");
@@ -61,11 +68,11 @@ public class HansikRecipeService {
     }
 
     public List<RecipeUrlDto> generateRecipeUrls() {
-        List<Integer> numbers = extractHrefIndexNumbers();
+        List<Integer> numbers = extractHrefIndexNumbers(indexCollectionName);
         return numbers.stream()
-                .map(number -> new RecipeUrlDto(
-                        hansikUrl.replace("{}", String.valueOf(number)),
-                        number
+                .map(siteIndex -> new RecipeUrlDto(
+                        hansikUrl.replace("{}", String.valueOf(siteIndex)),
+                        siteIndex
                 ))
                 .collect(Collectors.toList());
     }
@@ -86,6 +93,7 @@ public class HansikRecipeService {
 
         // 레시피 이름
         String recipeName = doc.select("h3.mb-0").first().text();
+        log.info("recipeName: {}", recipeName);
 
         // 레시피 재료
 
@@ -95,31 +103,35 @@ public class HansikRecipeService {
                 .map(Element::text)
                 .collect(Collectors.toList());
 
-        List<Map<String, String>> ingredients = new ArrayList<>();
+        List<Ingredient> ingredients = new ArrayList<>();
         for (String ingredientText : ingredientsRaw) {
             String[] items = ingredientText.split(",");
             for (String item : items) {
-                String trimmed = item.trim();
+                String trimmed = item.trim(); // 앞 뒤 공백 제거
                 if (!trimmed.isEmpty()) {
-                    Map<String, String> ingredient = parseIngredientItem(trimmed);
+                    Ingredient ingredient = Ingredient.builder()
+                            .ingredient(trimmed).build();
                     ingredients.add(ingredient);
                 }
             }
         }
 
+        // 하위 재료
         List<String> seasoningsRaw = doc.select("ul.list-unstyled.mt-1 li.text-smaller")
                 .stream()
                 .map(Element::text)
                 .collect(Collectors.toList());
 
-        List<Map<String, String>> seasonings = new ArrayList<>();
+
         for (String seasoningText : seasoningsRaw) {
             String[] items = seasoningText.split(",");
             for (String item : items) {
                 String trimmed = item.trim();
                 if (!trimmed.isEmpty()) {
-                    Map<String, String> seasoning = parseIngredientItem(trimmed);
-                    seasonings.add(seasoning);
+
+                    Ingredient ingredient = Ingredient.builder()
+                            .ingredient(trimmed).build();
+                    ingredients.add(ingredient);
                 }
             }
         }
@@ -127,45 +139,27 @@ public class HansikRecipeService {
 
         // 조리 순서
 
-        List<String> cookingSteps = new ArrayList<>();
+        List<CookingOrder> cookingSteps = new ArrayList<>();
 
         List<String> preparationSteps = doc.select("ol.list-unstyled.list-preparation li")
                 .stream()
                 .map(Element::text)
-                .collect(Collectors.toList());
-        cookingSteps.addAll(preparationSteps);
+                .toList();
+        Integer count = 1;
+        for (String cmp : preparationSteps) {
+            CookingOrder cookingOrder = CookingOrder.builder()
+                    .step(count)
+                    .instruction(cmp).build();
 
-        List<String> cookingProcess = doc.select("ol.list-unstyled.list-preparation li")
-                .stream()
-                .map(Element::text)
-                .collect(Collectors.toList());
-        cookingSteps.addAll(cookingProcess);
-
-        // 조리 시간
-
-        // 조리 시간은 없는듯 사이트 ㅏ체에
-
-
-
-    }
-
-    private Map<String, String> parseIngredientItem(String item) {
-        Map<String, String> result = new HashMap<>();
-
-        // 정규식으로 재료명과 양 분리 (예: "오징어 20마리(손질 후 500g)")
-        Pattern pattern = Pattern.compile("^([가-힣\\s]+?)\\s+(.*?)$");
-        Matcher matcher = pattern.matcher(item);
-
-        if (matcher.find()) {
-            result.put("name", matcher.group(1).trim());
-            result.put("quantity", matcher.group(2).trim());
-        } else {
-            result.put("name", item);
-            result.put("quantity", "");
+            count ++;
         }
 
-        return result;
+
+
+
     }
+
+
 
 
 

@@ -23,7 +23,7 @@ public class Recipe {
 
     private String recipeName;
 
-    private Long cookingTime;
+    private String cookingTime;
 
     private String sourceUrl;
     private String siteIndex;

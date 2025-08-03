@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class CookingOrder {
-    private Long step;
+    private Integer step;
     private String instruction;
 }

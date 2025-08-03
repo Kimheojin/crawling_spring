@@ -14,6 +14,7 @@ public class HansikUrlCrawlingService {
 
     private final CrawlingUtil crawlingUtil;
 
+    // {} 처리
     @Value("${recipe.indexUrl.hansik.url}")
     private String baseUrl;
 
