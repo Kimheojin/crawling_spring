@@ -18,10 +18,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-// 실제 db 사용 X
 @DataMongoTest
-// uri 는 자동으로 들어가는듯
 @TestPropertySource(properties = {
         "spring.data.mongodb.database=test_db"
 })
@@ -32,14 +29,12 @@ class MongoConfigTest {
 
     @BeforeEach
     void setUp() {
-        // 테스트 전 컬렉션클래스로 DB 초기화
         mongoTemplate.dropCollection(Recipe.class);
     }
 
     @Test
     @DisplayName("빈 생성 관련 정상 동작 테스트")
     void test1() {
-        // given + when + then
         assertThat(mongoTemplate).isNotNull();
         assertThat(mongoTemplate.getCollectionNames()).isNotNull();
     }
@@ -47,36 +42,30 @@ class MongoConfigTest {
     @Test
     @DisplayName("저장 관련 정상 동작 테스트")
     void test2() {
-        // given
         Recipe recipe = Recipe.builder()
                 .recipeName("김치찌개")
-                .cookingTime(30L)
+                .cookingTime("30분")
                 .sourceUrl("http://example.com/recipe/1")
                 .siteIndex("1")
                 .crawledAt(LocalDateTime.now())
                 .build();
 
-        // when
         Recipe savedRecipe = mongoTemplate.save(recipe);
 
-        // then
         assertThat(savedRecipe.getId()).isNotNull();
         assertThat(savedRecipe.getRecipeName()).isEqualTo("김치찌개");
-        assertThat(savedRecipe.getCookingTime()).isEqualTo(30L);
+        assertThat(savedRecipe.getCookingTime()).isEqualTo("30분");
         assertThat(savedRecipe.getSourceUrl()).isEqualTo("http://example.com/recipe/1");
         assertThat(savedRecipe.getSiteIndex()).isEqualTo("1");
         assertThat(savedRecipe.getCrawledAt()).isNotNull();
-        
-        // builder.default 빈 리스트로 들어가는지
+
         assertThat(savedRecipe.getIngredientList().isEmpty()).isTrue();
         assertThat(savedRecipe.getCookingOrderList().isEmpty()).isTrue();
-
     }
 
     @Test
     @DisplayName("ingredientList + cookingOrderList 추가 entity 저장 관련 테스트")
     void test3() {
-        // given
         Ingredient ingredient1 = Ingredient.builder()
                 .ingredient("김치")
                 .quantity("200g")
@@ -88,18 +77,18 @@ class MongoConfigTest {
                 .build();
 
         CookingOrder order1 = CookingOrder.builder()
-                .step(Long.valueOf(1))
+                .step(1)
                 .instruction("김치를 볶는다")
                 .build();
 
         CookingOrder order2 = CookingOrder.builder()
-                .step(Long.valueOf(1))
+                .step(2)
                 .instruction("돼지고기를 넣고 볶는다")
                 .build();
 
         Recipe recipe = Recipe.builder()
                 .recipeName("김치찌개")
-                .cookingTime(30L)
+                .cookingTime("30분")
                 .sourceUrl("http://example.com/recipe/1")
                 .siteIndex("site1")
                 .crawledAt(LocalDateTime.now())
@@ -110,10 +99,8 @@ class MongoConfigTest {
         recipe.getCookingOrderList().add(order1);
         recipe.getCookingOrderList().add(order2);
 
-        // when
         Recipe savedRecipe = mongoTemplate.save(recipe);
 
-        // then
         assertThat(savedRecipe.getId()).isNotNull();
         assertThat(savedRecipe.getIngredientList()).hasSize(2);
         assertThat(savedRecipe.getCookingOrderList()).hasSize(2);
@@ -126,10 +113,9 @@ class MongoConfigTest {
     @Test
     @DisplayName("id를 통한 조회 관련 테스트")
     void test4() {
-        // given
         Recipe recipe = Recipe.builder()
                 .recipeName("된장찌개")
-                .cookingTime(25L)
+                .cookingTime("25분")
                 .sourceUrl("http://example.com/recipe/2")
                 .siteIndex("site2")
                 .crawledAt(LocalDateTime.now())
@@ -137,10 +123,8 @@ class MongoConfigTest {
 
         Recipe savedRecipe = mongoTemplate.save(recipe);
 
-        // when
         Recipe foundRecipe = mongoTemplate.findById(savedRecipe.getId(), Recipe.class);
 
-        // then
         assertThat(foundRecipe).isNotNull();
         assertThat(foundRecipe.getRecipeName()).isEqualTo("된장찌개");
         assertThat(foundRecipe.getId()).isEqualTo(savedRecipe.getId());
@@ -149,10 +133,9 @@ class MongoConfigTest {
     @Test
     @DisplayName("레시피 이름을 통한 조회 관련 테스트")
     void test5() {
-        // given
         Recipe recipe1 = Recipe.builder()
                 .recipeName("김치찌개")
-                .cookingTime(30L)
+                .cookingTime("30분")
                 .sourceUrl("http://example.com/recipe/1")
                 .siteIndex("site1")
                 .crawledAt(LocalDateTime.now())
@@ -160,7 +143,7 @@ class MongoConfigTest {
 
         Recipe recipe2 = Recipe.builder()
                 .recipeName("된장찌개")
-                .cookingTime(25L)
+                .cookingTime("25분")
                 .sourceUrl("http://example.com/recipe/2")
                 .siteIndex("site2")
                 .crawledAt(LocalDateTime.now())
@@ -169,11 +152,9 @@ class MongoConfigTest {
         mongoTemplate.save(recipe1);
         mongoTemplate.save(recipe2);
 
-        // when
         Query query = new Query(Criteria.where("recipeName").is("김치찌개"));
         List<Recipe> foundRecipes = mongoTemplate.find(query, Recipe.class);
 
-        // then
         assertThat(foundRecipes).hasSize(1);
         assertThat(foundRecipes.get(0).getRecipeName()).isEqualTo("김치찌개");
     }
@@ -181,10 +162,9 @@ class MongoConfigTest {
     @Test
     @DisplayName("레시피 삭제 관련 테스트")
     void test6() {
-        // given
         Recipe recipe = Recipe.builder()
                 .recipeName("김치찌개")
-                .cookingTime(30L)
+                .cookingTime("30분")
                 .sourceUrl("http://example.com/recipe/1")
                 .siteIndex("site1")
                 .crawledAt(LocalDateTime.now())
@@ -192,12 +172,9 @@ class MongoConfigTest {
 
         Recipe savedRecipe = mongoTemplate.save(recipe);
 
-        // when
         mongoTemplate.remove(savedRecipe);
 
-        // then
         Recipe foundRecipe = mongoTemplate.findById(savedRecipe.getId(), Recipe.class);
         assertThat(foundRecipe).isNull();
     }
-
 }
