@@ -26,7 +26,7 @@ import java.util.Map;
 @Slf4j
 public class MenuPanRecipeService {
 
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
     @Value("${recipe.sites.menupan.url}")
     private String sourceUrl;
@@ -34,10 +34,13 @@ public class MenuPanRecipeService {
     @Value("${recipe.sites.menupan.collection-name}")
     private String collectionName;
 
+    @Value("${recipe.indexUrl.menu-pan.collection-name}")
+    private String indexCollectionName;
+
     public void crawlingRecipeAboutMenupan(){
         // url mongo 에서 가져온 다음에 합치는 메소드
 
-        List<Map> indexUrls = getAllRecipeUrlAsMap(collectionName);
+        List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
 
         for(Map map : indexUrls){
             String siteIndex = (String) map.get("siteIndex");
