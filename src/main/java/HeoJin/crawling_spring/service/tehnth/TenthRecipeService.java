@@ -26,8 +26,8 @@ import java.util.Map;
 @Slf4j
 public class TenthRecipeService {
 
-    @Value("${recipe.indexUrl.recipe10000.collection-name}")
-    private String indexCollectionName;
+//    @Value("${recipe.indexUrl.recipe10000.collection-name}")
+    private String indexCollectionName = "testRawDataInject";
 
     @Value("${recipe.sites.recipe10000.collection-name}")
     private String RecipeCollectionName;
@@ -47,6 +47,7 @@ public class TenthRecipeService {
         for(Map url: indexUrls){
             String siteIndex = (String) url.get("hrefIndex");
             String sourceUrl = baseUrl + siteIndex;
+            log.info("sourceUrl 생성 : {}",  sourceUrl);
 
             crawledRecipe(sourceUrl, siteIndex);
 
@@ -85,11 +86,11 @@ public class TenthRecipeService {
         log.info("foodname : {}", foodname);
 
         // 재료
-        Elements ingredients = content.select("div.ready_ingre3 li");
+        Elements ingredientItems = doc.select("ul.case1 li");
 
         List<Ingredient> ingredientList = new ArrayList<>();
-        for(Element ing : ingredients){
-            Element nameElement = ing.select("iv.ingre_list_name a").first();
+        for(Element ing : ingredientItems){
+            Element nameElement = ing.select("div.ingre_list_name a").first();
             Element quantityElement = ing.select("span.ingre_list_ea").first();
 
             String ingredientName = nameElement != null ? nameElement.text().trim() : "";
@@ -106,11 +107,12 @@ public class TenthRecipeService {
 
         Elements steps = content.select("div[id^=stepdescr]");  // id가 'stepdescr'로 시작하는 모든 div 선택
         ArrayList<CookingOrder> cookingOrders = new ArrayList<>();
-        Long stepCount = 0l;
+        Integer stepCount = 1;
         for (Element step : steps) {
             String stepDescription = step.text().trim();
-            log.info("Step {}: {}", stepCount++, stepDescription);
+            log.info("Step {}: {}", stepCount, stepDescription);
             cookingOrders.add(new CookingOrder(stepCount, stepDescription));
+            stepCount++;
         }
 
         // 조리 시간
@@ -126,7 +128,7 @@ public class TenthRecipeService {
         Recipe recipe = Recipe.builder()
                 .siteIndex(site_index)
                 .recipeName(foodname)
-                .cookingTime(Long.parseLong(String.valueOf(time)))
+                .cookingTime(String.valueOf(time))
                 .cookingOrderList(cookingOrders)
                 .ingredientList(ingredientList)
                 .build();
