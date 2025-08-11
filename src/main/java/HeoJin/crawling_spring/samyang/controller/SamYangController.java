@@ -1,8 +1,9 @@
 package HeoJin.crawling_spring.samyang.controller;
 
 
-import HeoJin.crawling_spring.service.samyang.SamYangRecipeService;
-import HeoJin.crawling_spring.service.samyang.SamYangUrlService;
+
+import HeoJin.crawling_spring.samyang.service.SamYangRecipeService;
+import HeoJin.crawling_spring.samyang.service.SamYangUrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

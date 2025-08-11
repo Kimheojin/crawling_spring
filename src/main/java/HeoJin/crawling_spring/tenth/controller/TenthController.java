@@ -1,6 +1,8 @@
 package HeoJin.crawling_spring.tenth.controller;
 
 
+import HeoJin.crawling_spring.tenth.service.TenthRecipeService;
+import HeoJin.crawling_spring.tenth.service.TenthRecipeUrlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

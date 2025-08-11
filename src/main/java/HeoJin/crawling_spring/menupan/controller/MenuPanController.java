@@ -1,8 +1,8 @@
 package HeoJin.crawling_spring.menupan.controller;
 
 
-import HeoJin.crawling_spring.service.menupan.MenuPanCrawlingService;
-import HeoJin.crawling_spring.service.menupan.MenuPanRecipeService;
+import HeoJin.crawling_spring.menupan.service.MenuPanCrawlingService;
+import HeoJin.crawling_spring.menupan.service.MenuPanRecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

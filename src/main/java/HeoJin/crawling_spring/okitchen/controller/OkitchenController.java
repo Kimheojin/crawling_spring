@@ -1,7 +1,7 @@
 package HeoJin.crawling_spring.okitchen.controller;
 
 
-import HeoJin.crawling_spring.service.okitchen.OkitchenService;
+import HeoJin.crawling_spring.okitchen.service.OkitchenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
