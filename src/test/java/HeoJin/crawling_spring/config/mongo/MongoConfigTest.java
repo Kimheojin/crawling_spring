@@ -1,8 +1,9 @@
 package HeoJin.crawling_spring.config.mongo;
 
-import HeoJin.crawling_spring.entity.recipe.Recipe;
-import HeoJin.crawling_spring.entity.recipe.Ingredient;
-import HeoJin.crawling_spring.entity.recipe.CookingOrder;
+
+import HeoJin.crawling_spring.common.entity.recipe.CookingOrder;
+import HeoJin.crawling_spring.common.entity.recipe.Ingredient;
+import HeoJin.crawling_spring.common.entity.recipe.Recipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -36,3 +36,8 @@ POST http://localhost:8080/api/crawling/samYang?categoryNo=23&startPage=1&endPag
 
 POST http://localhost:8080/api/crawling/hansik?startPage=1&endPage=17
 
+
+###
+## 만개의 레시피 테스트 겸
+POST http://localhost:8080/api/crawling/recipe/tenthRecipes
+

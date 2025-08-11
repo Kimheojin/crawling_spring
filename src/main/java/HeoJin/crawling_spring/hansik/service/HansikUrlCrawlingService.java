@@ -1,0 +1,32 @@
+package HeoJin.crawling_spring.hansik.service;
+
+
+import HeoJin.crawling_spring.common.util.CrawlingUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+
+@Service
+@RequiredArgsConstructor
+public class HansikUrlCrawlingService {
+
+    private final CrawlingUtil crawlingUtil;
+
+    // {} 처리
+    @Value("${recipe.indexUrl.hansik.url}")
+    private String baseUrl;
+
+    @Value("${recipe.indexUrl.hansik.collection-name}")
+    private String collectionName;
+
+    @Value("${recipe.indexUrl.hansik.css-selector}")
+    private String cssSelector;
+
+    public void crawlRecipeUrls( int startPage, int endPage) throws IOException {
+        crawlingUtil.crawlWithPaginationHanSik(baseUrl, startPage, endPage, cssSelector, collectionName);
+    }
+
+
+}
