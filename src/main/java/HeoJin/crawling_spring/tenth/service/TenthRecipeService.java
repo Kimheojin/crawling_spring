@@ -26,8 +26,8 @@ import java.util.Map;
 @Slf4j
 public class TenthRecipeService {
 
-//    @Value("${recipe.indexUrl.recipe10000.collection-name}")
-    private String indexCollectionName = "testRawDataInject";
+    @Value("${recipe.indexUrl.recipe10000.collection-name}")
+    private String indexCollectionName;
 
     @Value("${recipe.sites.recipe10000.collection-name}")
     private String RecipeCollectionName;

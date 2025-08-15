@@ -3,7 +3,9 @@ package HeoJin.crawling_spring.menupan.service;
 
 import HeoJin.crawling_spring.common.entity.recipe.CookingOrder;
 import HeoJin.crawling_spring.common.entity.recipe.Ingredient;
+import HeoJin.crawling_spring.common.entity.recipe.Recipe;
 import HeoJin.crawling_spring.common.util.CustomWebCrawlerUtil;
+import HeoJin.crawling_spring.hansik.dto.RecipeUrlDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -19,6 +21,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,39 +39,49 @@ public class MenuPanRecipeService {
     @Value("${recipe.sites.menupan.collection-name}")
     private String collectionName;
 
-//    @Value("${recipe.indexUrl.menu-pan.collection-name}")
-    private String indexCollectionName = "testRawDataInject";
+    @Value("${recipe.indexUrl.menu-pan.collection-name}")
+    private String indexCollectionName;
 
     public void crawlingRecipeAboutMenupan() throws IOException {
+        log.info("메뉴판 레시피 크롤링 시작");
         // url mongo 에서 가져온 다음에 합치는 메소드
 
-        List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
+        List<RecipeUrlDto> indexUrls = generateRecipeUrls();
+        log.info("크롤링 대상 URL {} 개 조회됨", indexUrls.size());
 
-        for(Map map : indexUrls){
-            String siteIndex = (String) map.get("siteIndex");
-            String url  = sourceUrl + siteIndex;
-
-            crawledRecipe(url, siteIndex);
+        for (RecipeUrlDto urlDto : indexUrls) {
+            log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", urlDto.getUrl(), urlDto.getSiteIndex());
+            crawledRecipe(urlDto.getUrl(), String.valueOf(urlDto.getSiteIndex()));
         }
+
+        log.info("메뉴판 레시피 크롤링 완료");
     }
 
-    public List<Map>  getAllRecipeUrlAsMap(String collectionName) {
-        Query query = new Query();
-
-        query.addCriteria(Criteria.where("isCrawled").is(false));
-
-        return mongoTemplate.find(query, Map.class, collectionName);
+    public List<RecipeUrlDto> generateRecipeUrls() {
+        List<Integer> numbers = extractHrefIndexNumbers(indexCollectionName);
+        return numbers.stream()
+                .map(siteIndex -> new RecipeUrlDto(
+                        sourceUrl.replace("{}", String.valueOf(siteIndex)),
+                        siteIndex
+                ))
+                .collect(Collectors.toList());
     }
+
+
 
     private void crawledRecipe(String acceptUrl, String siteIndex) throws IOException {
+        log.info("개별 레시피 크롤링 시작 - 사이트 인덱스: {}", siteIndex);
         String sourceUrl = acceptUrl;
-        Document document = CustomWebCrawlerUtil.connect(sourceUrl);
+        
+        try {
+            Document document = CustomWebCrawlerUtil.connect(sourceUrl);
+            log.info("웹 페이지 연결 성공 - URL: {}", sourceUrl);
 
         // 음식 명
         Element titleElement = document.selectFirst("div.wrap_top h2");
-
+        String title = "";
         if(titleElement != null){
-            String title = titleElement.text();
+            title = titleElement.text();
             log.info("title:{}",title);
         }else{
             log.info("{} : 제목 파싱에 실패했습니다.", sourceUrl);
@@ -74,34 +90,37 @@ public class MenuPanRecipeService {
         String Index = siteIndex;
 
         // 재료 목록
+        log.info("재료 목록 파싱 시작");
         List<Ingredient> ingredients = new ArrayList<>();
 
-        Elements ddElements = document.select("div.infoTable dd");
+        Elements aElements = document.select("div.infoTable dd a");
+        log.info("재료 a 태그 {} 개 발견", aElements.size());
 
-        for (Element dd : ddElements) {
-            // a 태그 안에서 재료면 추출
-            Element linkElement = dd.selectFirst("a");
-            if (linkElement != null) {
-                String ingredientName = linkElement.text().trim();
-
-                String fullText = dd.text();
-                String quantity = fullText.replace(ingredientName, "").trim();
-
-                quantity = quantity.replaceAll("^[,\\s\"]+|[,\\s\"]+$", "");
-
-                Ingredient ingredient = Ingredient.builder()
-                        .ingredient(ingredientName)
-                        .quantity(quantity)
-                        .build();
-                ingredients.add(ingredient);
+        List<String> ingredientNames = new ArrayList<>();
+        for (Element a : aElements) {
+            String ingredientName = a.text().trim();
+            if (!ingredientName.isEmpty()) {
+                ingredientNames.add(ingredientName);
             }
-
         }
 
+        if (!ingredientNames.isEmpty()) {
+            String allIngredients = String.join(", ", ingredientNames);
+            Ingredient ingredient = Ingredient.builder()
+                    .ingredient(allIngredients)
+                    .quantity("")
+                    .build();
+            ingredients.add(ingredient);
+        }
+
+        log.info("총 재료 개수: {}", ingredients.size());
+
         // 조리 순서
+        log.info("조리 순서 파싱 시작");
         List<CookingOrder> orders = new ArrayList<>();
         Elements dtElements = document.select("div.wrap_recipe dt");
-        Integer step = 1;
+        log.info("조리 순서 요소 {} 개 발견", dtElements.size());
+        int step = 1;
         for (Element dt : dtElements) {
             String orderText = dt.text().trim();
             String cleanOrderText = orderText.replaceFirst("^\\d+\\.\\s*", "");
@@ -111,11 +130,55 @@ public class MenuPanRecipeService {
                     .instruction(cleanOrderText).build();
 
             orders.add(order);
+            step++;
         }
 
 
         // 조리 시간
 
+        log.info("총 조리 순서 개수: {}", orders.size());
 
+        log.info("레시피 객체 생성 및 저장 시작");
+        Recipe recipe = Recipe.builder()
+                .siteIndex(Index)
+                .sourceUrl(sourceUrl)
+                .recipeName(title)
+                .ingredientList(ingredients)
+                .cookingOrderList(orders)
+                .build();
+
+        mongoTemplate.save(recipe, collectionName);
+        log.info("메뉴판 레시피 저장 완료 - 레시피명: {}", title);
+        
+        } catch (Exception e) {
+            log.error("레시피 크롤링 중 오류 발생 - URL: {}, 사이트 인덱스: {}, 에러: {}", sourceUrl, siteIndex, e.getMessage(), e);
+            throw e;
+        }
+
+
+    }
+
+    public List<Integer> extractHrefIndexNumbers(String indexCollectionName){
+        log.info("인덱스 컬렉션에서 href 번호 추출 시작: {}", indexCollectionName);
+        List<Map> documents = mongoTemplate.findAll(Map.class, indexCollectionName);
+        log.info("총 {} 개의 문서 조회됨", documents.size());
+
+        // 숫자만 가져오기
+        Pattern pattern = Pattern.compile("\\d+");
+
+        // https://girawhale.tistory.com/77
+
+        List<Integer> result = documents.stream()
+                .map(doc -> (String) doc.get("hrefIndex"))
+                .filter(Objects::nonNull)
+                .map(hrefIndex -> {
+                    Matcher matcher = pattern.matcher(hrefIndex);
+                    return matcher.find() ? Integer.parseInt(matcher.group()) : null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        log.info("추출된 인덱스 번호 개수: {}", result.size());
+        return result;
     }
 }

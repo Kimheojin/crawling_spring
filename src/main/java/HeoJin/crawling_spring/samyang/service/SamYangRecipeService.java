@@ -5,6 +5,7 @@ package HeoJin.crawling_spring.samyang.service;
 
 import HeoJin.crawling_spring.common.entity.recipe.CookingOrder;
 import HeoJin.crawling_spring.common.entity.recipe.Ingredient;
+import HeoJin.crawling_spring.common.entity.recipe.Recipe;
 import HeoJin.crawling_spring.common.util.CustomWebCrawlerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,16 +43,19 @@ public class SamYangRecipeService {
     // url 조합 먼저 하면 될듯
 
     public void crawlingRecipeAboutSamYang() throws IOException {
+        log.info("삼양 레시피 크롤링 시작");
         List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
+        log.info("크롤링 대상 URL {} 개 조회됨", indexUrls.size());
 
         for (Map map : indexUrls) {
-            String siteIndex = (String) map.get("siteIndex");
+            String siteIndex = (String) map.get("hrefIndex");
             String url = indexUrl + siteIndex;
+            log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", url, siteIndex);
 
             crawledRecipeAboutSamYang(url, siteIndex);
         }
 
-
+        log.info("삼양 레시피 크롤링 완료");
     }
 
     // site index 는 그냥 바로 넣으면 되는 거 아닌가?
@@ -65,21 +69,23 @@ public class SamYangRecipeService {
     }
 
     public void crawledRecipeAboutSamYang(String baseUrl, String index) throws IOException {
-
+        log.info("개별 레시피 크롤링 시작 - 사이트 인덱스: {}", index);
         String sourceUrl = baseUrl;
-        log.info("sourceUrl : {}", sourceUrl);
 
         String siteIndex = index;
-        log.info("사이트 인덱스 : {}", siteIndex);
 
         Document doc = CustomWebCrawlerUtil.connect(sourceUrl);
+        log.info("웹 페이지 연결 성공 - URL: {}", sourceUrl);
 
         // 레시피 이름
         String recipeName = doc.selectFirst("h3.recipe_detail_title").text();
+        log.info("레시피명: {}", recipeName);
 
         // 레시피 재료
+        log.info("재료 목록 파싱 시작");
         List<Ingredient> ingredients = new ArrayList<>();
         Elements elements = doc.select("table.col3 tbody tr");
+        log.info("재료 요소 {} 개 발견", elements.size());
 
         for (Element row : elements) {
             Elements tds = row.select("td");
@@ -115,12 +121,16 @@ public class SamYangRecipeService {
             }
 
         }
+        log.info("총 재료 개수: {}", ingredients.size());
+        
         // 조리 순서
+        log.info("조리 순서 파싱 시작");
         List<CookingOrder> orders = new ArrayList<>();
 
         // li 목록
         Elements stepElements = doc.select("div.fr-view.fr-view-article ol li");
-        Integer count = 1;
+        log.info("조리 순서 요소 {} 개 발견", stepElements.size());
+        int count = 1;
         for(Element step :  stepElements){
 
 
@@ -131,6 +141,18 @@ public class SamYangRecipeService {
             count++;
             orders.add(cookingOrder);
         }
+        log.info("총 조리 순서 개수: {}", orders.size());
+
+        log.info("레시피 객체 생성 및 저장 시작");
+        Recipe recipe = Recipe.builder()
+                .cookingOrderList(orders)
+                .ingredientList(ingredients)
+                .recipeName(recipeName)
+                .sourceUrl(sourceUrl)
+                .siteIndex(index).build();
+
+        mongoTemplate.save(recipe, collectionName);
+        log.info("삼양 레시피 저장 완료 - 레시피명: {}", recipeName);
 
         // 조리 시가
 

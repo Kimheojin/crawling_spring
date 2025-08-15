@@ -100,7 +100,7 @@ public class OkitchenService {
                 continue;
             }
             cookingOrders.add(CookingOrder.builder()
-                    .step((Integer) cookingOrderStep)
+                    .step(cookingOrderStep)
                     .instruction(order.text())
                     .build());
             log.info("Step: " + order.text());
