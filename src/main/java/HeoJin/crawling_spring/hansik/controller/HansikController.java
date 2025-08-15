@@ -19,11 +19,8 @@ public class HansikController {
     private final HansikRecipeService hansikRecipeService;
     private final HansikUrlCrawlingService hansikUrlCrawlingService;
 
-    @PostMapping("/recipes")
-    public ResponseEntity<String> hansikCrawling(){
-        return ResponseEntity.ok("크롤링이 완료되었습니다.");
-    }
 
+    // 인덱스 크롤링
     @PostMapping("/urls")
     public ResponseEntity<String> hanSikUrlCrawling(
             @RequestParam("startPage") int startPage,
@@ -31,5 +28,11 @@ public class HansikController {
     ) throws IOException {
         hansikUrlCrawlingService.crawlRecipeUrls( startPage, endPage);
         return ResponseEntity.ok("한식 크롤링이 종료되었습니다.");
+    }
+
+    // 데이터 크롤링
+    @PostMapping("/data")
+    public ResponseEntity<String> hansikDataCrawling(){
+        return ResponseEntity.ok("크롤링이 완료되었습니다.");
     }
 }

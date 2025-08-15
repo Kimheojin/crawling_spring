@@ -44,8 +44,11 @@ dependencies {
 
 	// mongo
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	// actuator
+	// 궁금해서 써보려고
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

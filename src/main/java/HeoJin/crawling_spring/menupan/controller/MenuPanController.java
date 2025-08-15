@@ -24,7 +24,8 @@ public class MenuPanController {
     @Value("${recipe.indexUrl.menu-pan.url}")
     private String menuPanIndexUrl;
 
-    @PostMapping("/recipes")
+    // menupan
+    @PostMapping("/data")
     public ResponseEntity<String> menuPanCrawling() throws IOException {
         menuPanRecipeService.crawlingRecipeAboutMenupan();
         return ResponseEntity.ok("크롤링이 완료되었습니다.");

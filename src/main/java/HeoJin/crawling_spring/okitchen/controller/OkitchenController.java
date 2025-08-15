@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/crawling/recipe/okitchen")
+@RequestMapping("/api/crawling/okitchen")
 @RequiredArgsConstructor
 public class OkitchenController {
 
     private final OkitchenService okitchenService;
 
-    @PostMapping
+    @PostMapping("/data")
     public ResponseEntity<String> okitchenCrawling(
             @RequestParam("startIndex") Long startIndex,
             @RequestParam("lastIndex") Long lastIndex) {

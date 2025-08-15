@@ -25,7 +25,7 @@ public class SamYangController {
     @Value("${recipe.indexUrl.samyang.url}")
     private String samYangUrl;
 
-    @PostMapping("/recipes")
+    @PostMapping("/data")
     public ResponseEntity<String> samYangCrawling(){
         return ResponseEntity.ok("크롤링이 완료되었습니다.");
     }

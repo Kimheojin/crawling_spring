@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/crawling/tenth")
+@RequestMapping("/api/crawling/tenthRecipes")
 @RequiredArgsConstructor
 public class TenthController {
 
     private final TenthRecipeService tenthRecipeService;
     private final TenthRecipeUrlService tenthRecipeUrlService;
 
-    @PostMapping("/recipes")
+    @PostMapping("/data")
     public ResponseEntity<String> tenthRecipeCrawling() throws Exception {
         tenthRecipeService.crawlingRecipeAboutTenth();
         return ResponseEntity.ok("크롤링이 완료되었습니다.");
