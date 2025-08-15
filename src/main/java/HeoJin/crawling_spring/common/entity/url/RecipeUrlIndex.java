@@ -19,5 +19,6 @@ public class RecipeUrlIndex {
     private String id;
 
     private String hrefIndex;
-    private boolean isCrawled;
+    @Builder.Default
+    private boolean isCrawled = false;
 }
