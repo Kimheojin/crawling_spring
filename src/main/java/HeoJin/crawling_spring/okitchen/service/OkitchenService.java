@@ -36,13 +36,17 @@ public class OkitchenService {
     @Value("${recipe.sites.okitchen.collection-name}")
     private String collectionName;
 
-    public void loopOkitchenUrl(Long startIndex, Long lastIndex){
+    public void crawlRecipesByIndexRange(Long startIndex, Long lastIndex){
         log.info("크롤링 시장: startIndex -> {}, lastIndex -> {}", startIndex, lastIndex);
+        
+        // 테스트용으로 10개만 처리하도록 제한
+        Long actualLastIndex = Math.min(lastIndex, startIndex + 9);
+        log.info("테스트 모드: 실제 종료 인덱스 -> {}", actualLastIndex);
 
-        for(Long i = startIndex; i <= lastIndex; i++){
+        for(Long i = startIndex; i <= actualLastIndex; i++){
             try {
                 String fullUrl = baseUrl + i;
-                crawRecipes(fullUrl, i.intValue());
+                crawlSingleRecipe(fullUrl, i.intValue());
 
                 Thread.sleep(500); // 0.5초
             } catch (Exception e ){
@@ -52,9 +56,9 @@ public class OkitchenService {
 
     }
 
-    private void crawRecipes(String acceptUrl, int index) throws Exception {
+    private void crawlSingleRecipe(String recipeUrl, int index) throws Exception {
 
-        String sourceUrl = acceptUrl;
+        String sourceUrl = recipeUrl;
         Document doc = CustomWebCrawlerUtil.connect(sourceUrl);// doc 객체로
 
 

@@ -20,7 +20,7 @@ public class OkitchenController {
     public ResponseEntity<String> okitchenCrawling(
             @RequestParam("startIndex") Long startIndex,
             @RequestParam("lastIndex") Long lastIndex) {
-        okitchenService.loopOkitchenUrl(startIndex, lastIndex);
+        okitchenService.crawlRecipesByIndexRange(startIndex, lastIndex);
         return ResponseEntity.ok("크롤링이 종료 되었습니다.");
     }
 }
