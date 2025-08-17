@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/crawling/menupan")
+@RequestMapping("/api/crawling/menuPan")
 @RequiredArgsConstructor
 public class MenuPanController {
 

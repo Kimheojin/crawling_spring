@@ -39,8 +39,6 @@ public class HansikRecipeService {
     @Value("${recipe.indexUrl.hansik.collection-name}")
     private String indexCollectionName;
 
-
-
     public void loopHansikUrl() throws IOException {
         log.info("한식 레시피 크롤링 시작");
         List<RecipeUrlDto> urlDtos = generateRecipeUrls();
@@ -191,9 +189,6 @@ public class HansikRecipeService {
             throw e;
         }
     }
-
-
-
 
 
 }

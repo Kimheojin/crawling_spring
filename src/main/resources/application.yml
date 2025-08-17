@@ -28,7 +28,7 @@ recipe:
       url: "https://www.10000recipe.com"
       collection-name: "recipe-10000-data"
     menupan:
-      url: "https://www.menupan.com/Cook/recipeview.asp?cookid="
+      url: "https://www.menupan.com/Cook/recipeview.asp?cookid={}"
       collection-name: "menupan-data"
     samyang:
       url: "https://m.serveq.co.kr/"
