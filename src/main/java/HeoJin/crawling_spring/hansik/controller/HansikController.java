@@ -33,7 +33,7 @@ public class HansikController {
     // 데이터 크롤링
     @PostMapping("/data")
     public ResponseEntity<String> hansikDataCrawling() throws IOException {
-        hansikRecipeService.loopHansikUrl();
+        hansikRecipeService.crawlAllRecipes();
         return ResponseEntity.ok("크롤링이 완료되었습니다.");
     }
 }

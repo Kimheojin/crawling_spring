@@ -27,7 +27,7 @@ public class MenuPanController {
     // menupan
     @PostMapping("/data")
     public ResponseEntity<String> menuPanCrawling() throws IOException {
-        menuPanRecipeService.crawlingRecipeAboutMenupan();
+        menuPanRecipeService.crawlAllRecipes();
         return ResponseEntity.ok("크롤링이 완료되었습니다.");
     }
 

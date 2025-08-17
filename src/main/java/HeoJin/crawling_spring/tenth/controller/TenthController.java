@@ -22,7 +22,7 @@ public class TenthController {
 
     @PostMapping("/data")
     public ResponseEntity<String> tenthRecipeCrawling() throws Exception {
-        tenthRecipeService.crawlingRecipeAboutTenth();
+        tenthRecipeService.crawlAllRecipes();
         return ResponseEntity.ok("크롤링이 완료되었습니다.");
     }
 

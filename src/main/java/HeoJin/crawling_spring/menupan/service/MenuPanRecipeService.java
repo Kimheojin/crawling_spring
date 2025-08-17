@@ -13,8 +13,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -42,16 +40,21 @@ public class MenuPanRecipeService {
     @Value("${recipe.indexUrl.menu-pan.collection-name}")
     private String indexCollectionName;
 
-    public void crawlingRecipeAboutMenupan() throws IOException {
+    public void crawlAllRecipes() throws IOException {
         log.info("메뉴판 레시피 크롤링 시작");
         // url mongo 에서 가져온 다음에 합치는 메소드
 
         List<RecipeUrlDto> indexUrls = generateRecipeUrls();
         log.info("크롤링 대상 URL {} 개 조회됨", indexUrls.size());
 
-        for (RecipeUrlDto urlDto : indexUrls) {
+        // 테스트용으로 10개만 처리하도록 제한
+        int maxTestCount = Math.min(indexUrls.size(), 10);
+        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
+
+        for (int i = 0; i < maxTestCount; i++) {
+            RecipeUrlDto urlDto = indexUrls.get(i);
             log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", urlDto.getUrl(), urlDto.getSiteIndex());
-            crawledRecipe(urlDto.getUrl(), String.valueOf(urlDto.getSiteIndex()));
+            crawlSingleRecipe(urlDto.getUrl(), String.valueOf(urlDto.getSiteIndex()));
         }
 
         log.info("메뉴판 레시피 크롤링 완료");
@@ -69,9 +72,9 @@ public class MenuPanRecipeService {
 
 
 
-    private void crawledRecipe(String acceptUrl, String siteIndex) throws IOException {
+    private void crawlSingleRecipe(String recipeUrl, String siteIndex) throws IOException {
         log.info("개별 레시피 크롤링 시작 - 사이트 인덱스: {}", siteIndex);
-        String sourceUrl = acceptUrl;
+        String sourceUrl = recipeUrl;
         
         try {
             Document document = CustomWebCrawlerUtil.connect(sourceUrl);
@@ -91,26 +94,19 @@ public class MenuPanRecipeService {
 
         // 재료 목록
         log.info("재료 목록 파싱 시작");
-        List<Ingredient> ingredients = new ArrayList<>();
+   
 
         Elements aElements = document.select("div.infoTable dd a");
         log.info("재료 a 태그 {} 개 발견", aElements.size());
 
-        List<String> ingredientNames = new ArrayList<>();
+        List<Ingredient> ingredients = new ArrayList<>();
         for (Element a : aElements) {
             String ingredientName = a.text().trim();
-            if (!ingredientName.isEmpty()) {
-                ingredientNames.add(ingredientName);
-            }
-        }
-
-        if (!ingredientNames.isEmpty()) {
-            String allIngredients = String.join(", ", ingredientNames);
             Ingredient ingredient = Ingredient.builder()
-                    .ingredient(allIngredients)
-                    .quantity("")
-                    .build();
-            ingredients.add(ingredient);
+                    .ingredient(ingredientName).build();
+            if (!ingredientName.isEmpty()) {
+                ingredients.add(ingredient);
+            }
         }
 
         log.info("총 재료 개수: {}", ingredients.size());

@@ -38,18 +38,23 @@ public class TenthRecipeService {
     private final MongoTemplate mongoTemplate;
 
     // 인덱스 기반으로 크롤링 하는 함수
-    public void crawlingRecipeAboutTenth() throws Exception {
+    public void crawlAllRecipes() throws Exception {
         // mongo template 활용해서 url 빼오고
         List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
-        // 그거 이용해서 크롤링 하면 될듯
+        log.info("총 {} 개의 URL 조회됨", indexUrls.size());
+        
+        // 테스트용으로 10개만 처리하도록 제한
+        int maxTestCount = Math.min(indexUrls.size(), 10);
+        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
 
         // for문?
-        for(Map url: indexUrls){
+        for(int i = 0; i < maxTestCount; i++){
+            Map url = indexUrls.get(i);
             String siteIndex = (String) url.get("hrefIndex");
             String sourceUrl = baseUrl + siteIndex;
             log.info("sourceUrl 생성 : {}",  sourceUrl);
 
-            crawledRecipe(sourceUrl, siteIndex);
+            crawlSingleRecipe(sourceUrl, siteIndex);
 
         }
 
@@ -68,11 +73,9 @@ public class TenthRecipeService {
     }
 
 
-    private void crawledRecipe(String acceptUrl, String siteIndex) throws Exception {
+    private void crawlSingleRecipe(String recipeUrl, String siteIndex) throws Exception {
 
-        Document doc = CustomWebCrawlerUtil.connect(acceptUrl);
-
-
+        Document doc = CustomWebCrawlerUtil.connect(recipeUrl);
 
         // 컨텐츠 영역 로딩
         Element content = doc.select("div#contents_area_full").first();
@@ -85,29 +88,32 @@ public class TenthRecipeService {
         String foodname = content.select("div.view2_summary.st3 h3").text();
         log.info("foodname : {}", foodname);
 
-        // 재료
-        Elements ingredientItems = doc.select("ul.case1 li");
+        // 재료 추출 - ready_ingre3 영역에서 가져오기
+        Elements ingredientItems = doc.select("div.ready_ingre3 ul li");
 
         List<Ingredient> ingredientList = new ArrayList<>();
-        for(Element ing : ingredientItems){
+        for (Element ing : ingredientItems) {
             Element nameElement = ing.select("div.ingre_list_name a").first();
             Element quantityElement = ing.select("span.ingre_list_ea").first();
 
             String ingredientName = nameElement != null ? nameElement.text().trim() : "";
             String quantity = quantityElement != null ? quantityElement.text().trim() : "";
 
+            log.info("파싱된 재료 - 이름: '{}', 수량: '{}'", ingredientName, quantity);
 
-            ingredientList.add(new Ingredient(ingredientName, quantity));
             if (!ingredientName.isEmpty()) {
-                log.info("Ingredient: {} + {}", ingredientName, quantity);
+                ingredientList.add(new Ingredient(ingredientName, quantity));
+                log.info("추가된 재료: {} - {}", ingredientName, quantity);
             }
         }
+
+        log.info("최종 재료 리스트 크기: {}", ingredientList.size());
 
         // 조리 순서
 
         Elements steps = content.select("div[id^=stepdescr]");  // id가 'stepdescr'로 시작하는 모든 div 선택
         ArrayList<CookingOrder> cookingOrders = new ArrayList<>();
-        Integer stepCount = 1;
+        int stepCount = 1;
         for (Element step : steps) {
             String stepDescription = step.text().trim();
             log.info("Step {}: {}", stepCount, stepDescription);
@@ -126,6 +132,7 @@ public class TenthRecipeService {
         }
 
         Recipe recipe = Recipe.builder()
+                .sourceUrl(recipeUrl)
                 .siteIndex(site_index)
                 .recipeName(foodname)
                 .cookingTime(String.valueOf(time))

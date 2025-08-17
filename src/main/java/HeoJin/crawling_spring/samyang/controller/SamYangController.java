@@ -28,7 +28,7 @@ public class SamYangController {
     @PostMapping("/data")
     public ResponseEntity<String> samYangCrawling() throws IOException {
 
-        samYangRecipeService.crawlingRecipeAboutSamYang();
+        samYangRecipeService.crawlAllRecipes();
         return ResponseEntity.ok("크롤링이 완료되었습니다.");
     }
 

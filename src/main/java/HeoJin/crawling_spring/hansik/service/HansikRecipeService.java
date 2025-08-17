@@ -39,14 +39,19 @@ public class HansikRecipeService {
     @Value("${recipe.indexUrl.hansik.collection-name}")
     private String indexCollectionName;
 
-    public void loopHansikUrl() throws IOException {
+    public void crawlAllRecipes() throws IOException {
         log.info("한식 레시피 크롤링 시작");
         List<RecipeUrlDto> urlDtos = generateRecipeUrls();
         log.info("총 {} 개의 URL 생성됨", urlDtos.size());
         
-        for (RecipeUrlDto urlDto : urlDtos) {
+        // 테스트용으로 10개만 처리하도록 제한
+        int maxTestCount = Math.min(urlDtos.size(), 10);
+        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
+        
+        for (int i = 0; i < maxTestCount; i++) {
+            RecipeUrlDto urlDto = urlDtos.get(i);
             log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", urlDto.getUrl(), urlDto.getSiteIndex());
-            crawlRecipes(urlDto.getUrl(), urlDto.getSiteIndex());
+            crawlSingleRecipe(urlDto.getUrl(), urlDto.getSiteIndex());
         }
         log.info("한식 레시피 크롤링 완료");
     }
@@ -87,11 +92,11 @@ public class HansikRecipeService {
 
     // 파싱 이루어지는 부분
 
-    public void crawlRecipes(String baseUrl, Integer siteIndex) throws IOException {
+    public void crawlSingleRecipe(String recipeUrl, Integer siteIndex) throws IOException {
         log.info("레시피 크롤링 시작 - 사이트 인덱스: {}", siteIndex);
 
         // site url
-        String sourceUrl = baseUrl;
+        String sourceUrl = recipeUrl;
         log.info("sourceUrl: {}", sourceUrl);
 
         try {

@@ -42,17 +42,22 @@ public class SamYangRecipeService {
 
     // url 조합 먼저 하면 될듯
 
-    public void crawlingRecipeAboutSamYang() throws IOException {
+    public void crawlAllRecipes() throws IOException {
         log.info("삼양 레시피 크롤링 시작");
         List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
         log.info("크롤링 대상 URL {} 개 조회됨", indexUrls.size());
 
-        for (Map map : indexUrls) {
+        // 테스트용으로 10개만 처리하도록 제한
+        int maxTestCount = Math.min(indexUrls.size(), 10);
+        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
+
+        for (int i = 0; i < maxTestCount; i++) {
+            Map map = indexUrls.get(i);
             String siteIndex = (String) map.get("hrefIndex");
             String url = indexUrl + siteIndex;
             log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", url, siteIndex);
 
-            crawledRecipeAboutSamYang(url, siteIndex);
+            crawlSingleRecipe(url, siteIndex);
         }
 
         log.info("삼양 레시피 크롤링 완료");
@@ -68,9 +73,9 @@ public class SamYangRecipeService {
         return mongoTemplate.find(query, Map.class, collectionName);
     }
 
-    public void crawledRecipeAboutSamYang(String baseUrl, String index) throws IOException {
+    public void crawlSingleRecipe(String recipeUrl, String index) throws IOException {
         log.info("개별 레시피 크롤링 시작 - 사이트 인덱스: {}", index);
-        String sourceUrl = baseUrl;
+        String sourceUrl = recipeUrl;
 
         String siteIndex = index;
 
