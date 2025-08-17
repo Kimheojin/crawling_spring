@@ -45,10 +45,10 @@ public class HansikRecipeService {
         log.info("총 {} 개의 URL 생성됨", urlDtos.size());
         
         // 테스트용으로 10개만 처리하도록 제한
-        int maxTestCount = Math.min(urlDtos.size(), 10);
-        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
+//        int maxTestCount = Math.min(urlDtos.size(), 10);
+//        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
         
-        for (int i = 0; i < maxTestCount; i++) {
+        for (int i = 0; i < urlDtos.size(); i++) {
             RecipeUrlDto urlDto = urlDtos.get(i);
             log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", urlDto.getUrl(), urlDto.getSiteIndex());
             crawlSingleRecipe(urlDto.getUrl(), urlDto.getSiteIndex());

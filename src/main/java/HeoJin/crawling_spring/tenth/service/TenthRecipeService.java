@@ -44,11 +44,11 @@ public class TenthRecipeService {
         log.info("총 {} 개의 URL 조회됨", indexUrls.size());
         
         // 테스트용으로 10개만 처리하도록 제한
-        int maxTestCount = Math.min(indexUrls.size(), 10);
-        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
+//        int maxTestCount = Math.min(indexUrls.size(), 10);
+//        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
 
         // for문?
-        for(int i = 0; i < maxTestCount; i++){
+        for(int i = 0; i < indexUrls.size(); i++){
             Map url = indexUrls.get(i);
             String siteIndex = (String) url.get("hrefIndex");
             String sourceUrl = baseUrl + siteIndex;

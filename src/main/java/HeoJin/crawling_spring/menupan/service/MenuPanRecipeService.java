@@ -48,10 +48,10 @@ public class MenuPanRecipeService {
         log.info("크롤링 대상 URL {} 개 조회됨", indexUrls.size());
 
         // 테스트용으로 10개만 처리하도록 제한
-        int maxTestCount = Math.min(indexUrls.size(), 10);
-        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
+//        int maxTestCount = Math.min(indexUrls.size(), 10);
+//        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
 
-        for (int i = 0; i < maxTestCount; i++) {
+        for (int i = 0; i < indexUrls.size(); i++) {
             RecipeUrlDto urlDto = indexUrls.get(i);
             log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", urlDto.getUrl(), urlDto.getSiteIndex());
             crawlSingleRecipe(urlDto.getUrl(), String.valueOf(urlDto.getSiteIndex()));

@@ -40,10 +40,10 @@ public class OkitchenService {
         log.info("크롤링 시장: startIndex -> {}, lastIndex -> {}", startIndex, lastIndex);
         
         // 테스트용으로 10개만 처리하도록 제한
-        Long actualLastIndex = Math.min(lastIndex, startIndex + 9);
-        log.info("테스트 모드: 실제 종료 인덱스 -> {}", actualLastIndex);
+//        Long actualLastIndex = Math.min(lastIndex, startIndex + 9);
+//        log.info("테스트 모드: 실제 종료 인덱스 -> {}", actualLastIndex);
 
-        for(Long i = startIndex; i <= actualLastIndex; i++){
+        for(Long i = startIndex; i <= lastIndex; i++){
             try {
                 String fullUrl = baseUrl + i;
                 crawlSingleRecipe(fullUrl, i.intValue());
