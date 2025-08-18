@@ -1,6 +1,7 @@
 package HeoJin.crawling_spring.tenth.controller;
 
 
+import HeoJin.crawling_spring.tenth.service.TenthRecipeRecoveryService;
 import HeoJin.crawling_spring.tenth.service.TenthRecipeService;
 import HeoJin.crawling_spring.tenth.service.TenthRecipeUrlService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class TenthController {
 
     private final TenthRecipeService tenthRecipeService;
     private final TenthRecipeUrlService tenthRecipeUrlService;
+    private final TenthRecipeRecoveryService tenthRecipeRecoveryService;
 
     @PostMapping("/data")
     public ResponseEntity<String> tenthRecipeCrawling() throws Exception {
@@ -33,5 +35,12 @@ public class TenthController {
     ) throws IOException {
         tenthRecipeUrlService.crawlRecipeUrls(startPage, lastPage);
         return ResponseEntity.ok("크롤링이 종료되었습니다");
+    }
+
+    // 이어서 하기
+    @PostMapping("/dataRecovery")
+    public ResponseEntity<String> tenthRecipesRecovery() throws Exception {
+        tenthRecipeRecoveryService.recoveryData();
+        return ResponseEntity.ok("크롤링이 종료되었습닌다.");
     }
 }

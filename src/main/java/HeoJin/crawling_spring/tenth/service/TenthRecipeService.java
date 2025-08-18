@@ -73,12 +73,18 @@ public class TenthRecipeService {
     }
 
 
-    private void crawlSingleRecipe(String recipeUrl, String siteIndex) throws Exception {
+    public void crawlSingleRecipe(String recipeUrl, String siteIndex) throws Exception {
 
         Document doc = CustomWebCrawlerUtil.connect(recipeUrl);
 
         // 컨텐츠 영역 로딩
         Element content = doc.select("div#contents_area_full").first();
+        
+        // null 체크 - 컨텐츠가 없으면 다음으로 넘어감
+        if (content == null) {
+            log.warn("컨텐츠 영역을 찾을 수 없습니다. 사이트 인덱스: {}", siteIndex);
+            return;
+        }
 
         // 사이트 인덱스
         String site_index = siteIndex;

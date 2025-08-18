@@ -49,4 +49,8 @@ POST http://localhost:8080/api/crawling/samyang/urls?categoryNo=23&startPage=1&e
 POST http://localhost:8080/api/crawling/samyang/data
 
 
+### 10000개의 레시피 복구 로직
+POST http://localhost:8080/api/crawling/tenthRecipes/dataRecovery
+
+
 
