@@ -29,7 +29,7 @@ public class HansikRecipeService {
 
     private final MongoTemplate mongoTemplate;
 
-    // 한식 url  + {} 처리 생각하기
+    // 한식 url  + {} 처리
     @Value("${recipe.sites.hansik.url}")
     private String hansikUrl;
 
@@ -43,11 +43,7 @@ public class HansikRecipeService {
         log.info("한식 레시피 크롤링 시작");
         List<RecipeUrlDto> urlDtos = generateRecipeUrls();
         log.info("총 {} 개의 URL 생성됨", urlDtos.size());
-        
-        // 테스트용으로 10개만 처리하도록 제한
-//        int maxTestCount = Math.min(urlDtos.size(), 10);
-//        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
-        
+
         for (int i = 0; i < urlDtos.size(); i++) {
             RecipeUrlDto urlDto = urlDtos.get(i);
             log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", urlDto.getUrl(), urlDto.getSiteIndex());

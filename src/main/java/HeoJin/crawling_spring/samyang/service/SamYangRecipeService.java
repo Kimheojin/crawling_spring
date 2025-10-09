@@ -47,10 +47,6 @@ public class SamYangRecipeService {
         List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
         log.info("크롤링 대상 URL {} 개 조회됨", indexUrls.size());
 
-        // 테스트용으로 10개만 처리하도록 제한
-//        int maxTestCount = Math.min(indexUrls.size(), 10);
-//        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
-
         for (int i = 0; i < indexUrls.size(); i++) {
             Map map = indexUrls.get(i);
             String siteIndex = (String) map.get("hrefIndex");
@@ -138,7 +134,6 @@ public class SamYangRecipeService {
         int count = 1;
         for(Element step :  stepElements){
 
-
             String description = step.text().trim();
             CookingOrder cookingOrder = CookingOrder.builder()
                     .instruction(description)
@@ -158,11 +153,6 @@ public class SamYangRecipeService {
 
         mongoTemplate.save(recipe, collectionName);
         log.info("삼양 레시피 저장 완료 - 레시피명: {}", recipeName);
-
-        // 조리 시가
-
-
-
 
     }
 

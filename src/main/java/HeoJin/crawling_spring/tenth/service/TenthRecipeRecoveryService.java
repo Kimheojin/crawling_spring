@@ -1,10 +1,8 @@
 package HeoJin.crawling_spring.tenth.service;
 
 
-import HeoJin.crawling_spring.common.entity.recipe.Recipe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +33,6 @@ public class TenthRecipeRecoveryService {
     private String baseUrl;
 
 
-
-
-
     public void recoveryData() throws Exception {
 
         long siteCount = mongoTemplate.count(new Query(Criteria.where("siteIndex").exists(true)), RecipeCollectionName);
@@ -51,7 +45,6 @@ public class TenthRecipeRecoveryService {
         query1.fields().include("siteIndex"); // projection
         // object Id 는 들어올듯
         List<Object> siteIndexList = mongoTemplate.find(query1, Object.class, RecipeCollectionName);// Bson으로 들어옴
-
 
 
         Query query2 = new  Query(Criteria.where("hrefIndex").exists(true));

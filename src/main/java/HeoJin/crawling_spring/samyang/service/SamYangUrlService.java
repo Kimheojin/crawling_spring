@@ -26,6 +26,4 @@ public class SamYangUrlService {
         crawlingUtil.crawlWithPagination(baseUrl, startPage, endPage, cssSelector, collectionName);
     }
 
-
-
 }

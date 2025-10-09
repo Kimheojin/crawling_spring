@@ -88,7 +88,6 @@ public class OkitchenService {
                 .collect(Collectors.toList());
 
 
-        // 그거
         log.info("재료 총 갯수 : {}", ingredients.size());
         log.info("재료 들 : {}", ingredients);
 

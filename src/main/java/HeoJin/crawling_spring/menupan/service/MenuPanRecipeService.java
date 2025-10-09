@@ -47,10 +47,6 @@ public class MenuPanRecipeService {
         List<RecipeUrlDto> indexUrls = generateRecipeUrls();
         log.info("크롤링 대상 URL {} 개 조회됨", indexUrls.size());
 
-        // 테스트용으로 10개만 처리하도록 제한
-//        int maxTestCount = Math.min(indexUrls.size(), 10);
-//        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
-
         for (int i = 0; i < indexUrls.size(); i++) {
             RecipeUrlDto urlDto = indexUrls.get(i);
             log.info("크롤링 중: URL = {}, 사이트 인덱스 = {}", urlDto.getUrl(), urlDto.getSiteIndex());
@@ -161,8 +157,6 @@ public class MenuPanRecipeService {
 
         // 숫자만 가져오기
         Pattern pattern = Pattern.compile("\\d+");
-
-        // https://girawhale.tistory.com/77
 
         List<Integer> result = documents.stream()
                 .map(doc -> (String) doc.get("hrefIndex"))

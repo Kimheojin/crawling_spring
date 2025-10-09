@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @Getter
 public class Recipe {
-    @Id // mongo 아이디가 string
+    @Id
     private String id;
 
     private String recipeName;

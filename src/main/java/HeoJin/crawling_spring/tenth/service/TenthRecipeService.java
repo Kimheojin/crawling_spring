@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +41,7 @@ public class TenthRecipeService {
         // mongo template 활용해서 url 빼오고
         List<Map> indexUrls = getAllRecipeUrlAsMap(indexCollectionName);
         log.info("총 {} 개의 URL 조회됨", indexUrls.size());
-        
-        // 테스트용으로 10개만 처리하도록 제한
-//        int maxTestCount = Math.min(indexUrls.size(), 10);
-//        log.info("테스트 모드: {} 개의 URL만 처리", maxTestCount);
+
 
         // for문?
         for(int i = 0; i < indexUrls.size(); i++){
@@ -61,13 +57,9 @@ public class TenthRecipeService {
     }
 
     // mongo 에서 url 가져오는 함수
-    // map?? entity 기반 Arraylist? 둘중 하나로
     private List<Map> getAllRecipeUrlAsMap(String collectionName) {
         Query query = new Query();
         query.addCriteria(Criteria.where("isCrawled").is(false));
-
-        // 인덱스 안타면 느림
-//        query.with(Sort.by(Sort.Direction.ASC, "hrefIndex"));
 
         return mongoTemplate.find(query, Map.class, collectionName);
     }

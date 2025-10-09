@@ -17,5 +17,5 @@ public class CustomExceptionHandler {
                 .body(new ErrorResponse(e.getMessage()));
     }
 
-    // 나머지 mongo 컴파일 exception 보고
+    // 나머지 mongo 컴파일 exception 보고 추가할 부분 생기면 추가하기
 }
